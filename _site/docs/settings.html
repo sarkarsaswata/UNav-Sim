@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>AirSim Settings | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="AirSim Settings" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/settings.html" />
+<meta property="og:url" content="http://localhost:4000/docs/settings.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="AirSim Settings" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/settings.html","headline":"AirSim Settings","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="airsim-settings">AirSim Settings</h1>
+
+<h2 id="where-are-settings-stored">Where are Settings Stored?</h2>
+<p>AirSim is searching for the settings definition in the following order. The first match will be used:</p>
+
+<ol>
+  <li>
+    <p>Looking at the (absolute) path specified by the <code class="language-plaintext highlighter-rouge">-settings</code> command line argument.
+For example, in Windows: <code class="language-plaintext highlighter-rouge">AirSim.exe -settings="C:\path\to\settings.json"</code>
+In Linux <code class="language-plaintext highlighter-rouge">./Blocks.sh -settings="/home/$USER/path/to/settings.json"</code></p>
+  </li>
+  <li>
+    <p>Looking for a json document passed as a command line argument by the <code class="language-plaintext highlighter-rouge">-settings</code> argument.
+For example, in Windows: <code class="language-plaintext highlighter-rouge">AirSim.exe -settings={"foo":"bar"}</code>
+In Linux <code class="language-plaintext highlighter-rouge">./Blocks.sh -settings={"foo":"bar"}</code></p>
+  </li>
+  <li>
+    <p>Looking in the folder of the executable for a file called <code class="language-plaintext highlighter-rouge">settings.json</code>.
+This will be a deep location where the actual executable of the Editor or binary is stored.
+For e.g. with the Blocks binary, the location searched is <code class="language-plaintext highlighter-rouge">&lt;path-of-binary&gt;/LinuxNoEditor/Blocks/Binaries/Linux/settings.json</code>.</p>
+  </li>
+  <li>
+    <p>Searching for <code class="language-plaintext highlighter-rouge">settings.json</code> in the folder from where the executable is launched</p>
+
+    <p>This is a top-level directory containing the launch script or executable. For e.g. Linux: <code class="language-plaintext highlighter-rouge">&lt;path-of-binary&gt;/LinuxNoEditor/settings.json</code>, Windows: <code class="language-plaintext highlighter-rouge">&lt;path-of-binary&gt;/WindowsNoEditor/settings.json</code></p>
+
+    <p>Note that this path changes depending on where its invoked from. On Linux, if executing the <code class="language-plaintext highlighter-rouge">Blocks.sh</code> script from inside LinuxNoEditor folder like <code class="language-plaintext highlighter-rouge">./Blocks.sh</code>, then the previous mentioned path is used. However, if launched from outside LinuxNoEditor folder such as <code class="language-plaintext highlighter-rouge">./LinuxNoEditor/Blocks.sh</code>, then <code class="language-plaintext highlighter-rouge">&lt;path-of-binary&gt;/settings.json</code> will be used.</p>
+  </li>
+  <li>
+    <p>Looking in the AirSim subfolder for a file called <code class="language-plaintext highlighter-rouge">settings.json</code>. The AirSim subfolder is located at <code class="language-plaintext highlighter-rouge">Documents\AirSim</code> on Windows and <code class="language-plaintext highlighter-rouge">~/Documents/AirSim</code> on Linux systems.</p>
+  </li>
+</ol>
+
+<p>The file is in usual <a href="https://en.wikipedia.org/wiki/JSON">json format</a>. On first startup AirSim would create <code class="language-plaintext highlighter-rouge">settings.json</code> file with no settings at the users home folder. To avoid problems, always use ASCII format to save json file.</p>
+
+<h2 id="how-to-chose-between-car-and-multirotor">How to Chose Between Car and Multirotor?</h2>
+<p>The default is to use multirotor. To use car simple set <code class="language-plaintext highlighter-rouge">"SimMode": "Car"</code> like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "SettingsVersion": 1.2,
+  "SimMode": "Car"
+}
+</code></pre></div></div>
+
+<p>To choose multirotor, set <code class="language-plaintext highlighter-rouge">"SimMode": "Multirotor"</code>. If you want to prompt user to select vehicle type then use <code class="language-plaintext highlighter-rouge">"SimMode": ""</code>.</p>
+
+<h2 id="available-settings-and-their-defaults">Available Settings and Their Defaults</h2>
+<p>Below are complete list of settings available along with their default values. If any of the settings is missing from json file, then default value is used. Some default values are simply specified as <code class="language-plaintext highlighter-rouge">""</code> which means actual value may be chosen based on the vehicle you are using. For example, <code class="language-plaintext highlighter-rouge">ViewMode</code> setting has default value <code class="language-plaintext highlighter-rouge">""</code> which translates to <code class="language-plaintext highlighter-rouge">"FlyWithMe"</code> for drones and <code class="language-plaintext highlighter-rouge">"SpringArmChase"</code> for cars.</p>
+
+<p><strong>WARNING:</strong> Do not copy paste all of below in your settings.json. We strongly recommend adding only those settings that you don’t want default values. Only required element is <code class="language-plaintext highlighter-rouge">"SettingsVersion"</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"SimMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ClockType"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ClockSpeed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"LocalHostIp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ApiServerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">41451</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"RecordUIVisible"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"LogMessagesVisible"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ShowLosDebugLines"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ViewMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"RpcEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"EngineSound"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"PhysicsEngineName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"SpeedUnitFactor"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"SpeedUnitLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"m/s"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Wind"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"CameraDirector"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"FollowDistance"</span><span class="p">:</span><span class="w"> </span><span class="mi">-3</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Pitch"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Roll"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Yaw"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"Recording"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"RecordOnMove"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"RecordInterval"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Folder"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Cameras"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"PixelsAsFloat"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">  </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="nl">"Compress"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"CameraDefaults"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"CaptureSettings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Width"</span><span class="p">:</span><span class="w"> </span><span class="mi">256</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Height"</span><span class="p">:</span><span class="w"> </span><span class="mi">144</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"FOV_Degrees"</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"AutoExposureSpeed"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"AutoExposureBias"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"AutoExposureMaxBrightness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.64</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"AutoExposureMinBrightness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"MotionBlurAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"TargetGamma"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ProjectionMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"OrthoWidth"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.12</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"NoiseSettings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+
+        </span><span class="nl">"RandContrib"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"RandSpeed"</span><span class="p">:</span><span class="w"> </span><span class="mf">100000.0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"RandSize"</span><span class="p">:</span><span class="w"> </span><span class="mf">500.0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"RandDensity"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+
+        </span><span class="nl">"HorzWaveContrib"</span><span class="p">:</span><span class="mf">0.03</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"HorzWaveStrength"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.08</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"HorzWaveVertSize"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"HorzWaveScreenSize"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+
+        </span><span class="nl">"HorzNoiseLinesContrib"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"HorzNoiseLinesDensityY"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"HorzNoiseLinesDensityXY"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+
+        </span><span class="nl">"HorzDistortionContrib"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"HorzDistortionStrength"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"Gimbal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"Stabilization"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Pitch"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Roll"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Yaw"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Pitch"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Roll"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Yaw"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"UnrealEngine"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"PixelFormatOverride"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"PixelFormat"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"OriginGeopoint"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.641468</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.140165</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Altitude"</span><span class="p">:</span><span class="w"> </span><span class="mi">122</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"TimeOfDay"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"StartDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"CelestialClockSpeed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"StartDateTimeDst"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"UpdateIntervalSecs"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"SubWindows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">"External"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">"External"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">"External"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"SegmentationSettings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"InitMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"MeshNamingMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"OverrideExisting"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"PawnPaths"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"BareboneCar"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"PawnBP"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Class'/AirSim/VehicleAdv/Vehicle/VehicleAdvPawn.VehicleAdvPawn_C'"</span><span class="p">},</span><span class="w">
+    </span><span class="nl">"DefaultCar"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"PawnBP"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Class'/AirSim/VehicleAdv/SUV/SuvCarPawn.SuvCarPawn_C'"</span><span class="p">},</span><span class="w">
+    </span><span class="nl">"DefaultQuadrotor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"PawnBP"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Class'/AirSim/Blueprints/BP_FlyingPawn.BP_FlyingPawn_C'"</span><span class="p">},</span><span class="w">
+    </span><span class="nl">"DefaultComputerVision"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"PawnBP"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Class'/AirSim/Blueprints/BP_ComputerVisionPawn.BP_ComputerVisionPawn_C'"</span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"SimpleFlight"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SimpleFlight"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"DefaultVehicleState"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Armed"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"AutoCreate"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"PawnPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"EnableCollisionPassthrogh"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"EnableCollisions"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"AllowAPIAlways"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"EnableTrace"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"RC"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"RemoteControlID"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"AllowAPIWhenDisconnected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"Cameras"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">//same</span><span class="w"> </span><span class="err">elements</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">CameraDefaults</span><span class="w"> </span><span class="err">above</span><span class="p">,</span><span class="w"> </span><span class="err">key</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">name</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Pitch"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Roll"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Yaw"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"PhysXCar"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PhysXCar"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"DefaultVehicleState"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"AutoCreate"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"PawnPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"EnableCollisionPassthrogh"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"EnableCollisions"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"RC"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"RemoteControlID"</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"Cameras"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"MyCamera1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="err">//same</span><span class="w"> </span><span class="err">elements</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">elements</span><span class="w"> </span><span class="err">inside</span><span class="w"> </span><span class="err">CameraDefaults</span><span class="w"> </span><span class="err">above</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"MyCamera2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="err">//same</span><span class="w"> </span><span class="err">elements</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">elements</span><span class="w"> </span><span class="err">inside</span><span class="w"> </span><span class="err">CameraDefaults</span><span class="w"> </span><span class="err">above</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Pitch"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Roll"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="p">,</span><span class="w"> </span><span class="nl">"Yaw"</span><span class="p">:</span><span class="w"> </span><span class="err">NaN</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"ExternalCameras"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"FixedCamera1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">same</span><span class="w"> </span><span class="err">elements</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">CameraDefaults</span><span class="w"> </span><span class="err">above</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"FixedCamera2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">same</span><span class="w"> </span><span class="err">elements</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">CameraDefaults</span><span class="w"> </span><span class="err">above</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="simmode">SimMode</h2>
+<p>SimMode determines which simulation mode will be used. Below are currently supported values:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">""</code>: prompt user to select vehicle type multirotor or car</li>
+  <li><code class="language-plaintext highlighter-rouge">"Multirotor"</code>: Use multirotor simulation</li>
+  <li><code class="language-plaintext highlighter-rouge">"Car"</code>: Use car simulation</li>
+  <li><code class="language-plaintext highlighter-rouge">"ComputerVision"</code>: Use only camera, no vehicle or physics</li>
+</ul>
+
+<h2 id="viewmode">ViewMode</h2>
+<p>The ViewMode determines which camera to use as default and how camera will follow the vehicle. For multirotors, the default ViewMode is <code class="language-plaintext highlighter-rouge">"FlyWithMe"</code> while for cars the default ViewMode is <code class="language-plaintext highlighter-rouge">"SpringArmChase"</code>.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">FlyWithMe</code>: Chase the vehicle from behind with 6 degrees of freedom</li>
+  <li><code class="language-plaintext highlighter-rouge">GroundObserver</code>: Chase the vehicle from 6’ above the ground but with full freedom in XY plane.</li>
+  <li><code class="language-plaintext highlighter-rouge">Fpv</code>: View the scene from front camera of vehicle</li>
+  <li><code class="language-plaintext highlighter-rouge">Manual</code>: Don’t move camera automatically. Use arrow keys and ASWD keys for move camera manually.</li>
+  <li><code class="language-plaintext highlighter-rouge">SpringArmChase</code>: Chase the vehicle with camera mounted on (invisible) arm that is attached to the vehicle via spring (so it has some latency in movement).</li>
+  <li><code class="language-plaintext highlighter-rouge">NoDisplay</code>: This will freeze rendering for main screen however rendering for subwindows, recording and APIs remain active. This mode is useful to save resources in “headless” mode where you are only interested in getting images and don’t care about what gets rendered on main screen. This may also improve FPS for recording images.</li>
+</ul>
+
+<h2 id="timeofday">TimeOfDay</h2>
+<p>This setting controls the position of Sun in the environment. By default <code class="language-plaintext highlighter-rouge">Enabled</code> is false which means Sun’s position is left at whatever was the default in the environment and it doesn’t change over the time. If <code class="language-plaintext highlighter-rouge">Enabled</code> is true then Sun position is computed using longitude, latitude and altitude specified in <code class="language-plaintext highlighter-rouge">OriginGeopoint</code> section for the date specified in <code class="language-plaintext highlighter-rouge">StartDateTime</code> in the string format as <a href="https://en.cppreference.com/w/cpp/io/manip/get_time">%Y-%m-%d %H:%M:%S</a>, for example, <code class="language-plaintext highlighter-rouge">2018-02-12 15:20:00</code>. If this string is empty then current date and time is used. If <code class="language-plaintext highlighter-rouge">StartDateTimeDst</code> is true then we adjust for day light savings time. The Sun’s position is then continuously updated at the interval specified in <code class="language-plaintext highlighter-rouge">UpdateIntervalSecs</code>. In some cases, it might be desirable to have celestial clock run faster or slower than simulation clock. This can be specified using <code class="language-plaintext highlighter-rouge">CelestialClockSpeed</code>, for example, value 100 means for every 1 second of simulation clock, Sun’s position is advanced by 100 seconds so Sun will move in sky much faster.</p>
+
+<p>Also see <a href="apis.md#time-of-day-api">Time of Day API</a>.</p>
+
+<h2 id="origingeopoint">OriginGeopoint</h2>
+<p>This setting specifies the latitude, longitude and altitude of the Player Start component placed in the Unreal environment. The vehicle’s home point is computed using this transformation. Note that all coordinates exposed via APIs are using NED system in SI units which means each vehicle starts at (0, 0, 0) in NED system. Time of Day settings are computed for geographical coordinates specified in <code class="language-plaintext highlighter-rouge">OriginGeopoint</code>.</p>
+
+<h2 id="subwindows">SubWindows</h2>
+<p>This setting determines what is shown in each of 3 subwindows which are visible when you press 1,2,3 keys.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">WindowID</code>: Can be 0 to 2</li>
+  <li><code class="language-plaintext highlighter-rouge">CameraName</code>: is any <a href="image_apis.md#available-cameras">available camera</a> on the vehicle or external camera</li>
+  <li><code class="language-plaintext highlighter-rouge">ImageType</code>: integer value determines what kind of image gets shown according to <a href="image_apis.md#available-imagetype-values">ImageType enum</a>.</li>
+  <li><code class="language-plaintext highlighter-rouge">VehicleName</code>: string allows you to specify the vehicle to use the camera from, used when multiple vehicles are specified in the settings. First vehicle’s camera will be used if there are any mistakes such as incorrect vehicle name, or only a single vehicle.</li>
+  <li><code class="language-plaintext highlighter-rouge">External</code>: Set it to <code class="language-plaintext highlighter-rouge">true</code> if the camera is an external camera. If true, then the <code class="language-plaintext highlighter-rouge">VehicleName</code> parameter is ignored</li>
+</ul>
+
+<p>For example, for a single car vehicle, below shows driver view, front bumper view and rear view as scene, depth and surface normals respectively.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="nl">"SubWindows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>In case of multiple vehicles, different vehicles can be specified as follows-</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="nl">"SubWindows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Car1"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Car2"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="nl">"WindowID"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Car1"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Visible"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="recording">Recording</h2>
+<p>The recording feature allows you to record data such as position, orientation, velocity along with the captured image at specified intervals. You can start recording by pressing red Record button on lower right or the R key. The data is stored in the <code class="language-plaintext highlighter-rouge">Documents\AirSim</code> folder (or the folder specified using <code class="language-plaintext highlighter-rouge">Folder</code>), in a time stamped subfolder for each recording session, as tab separated file.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">RecordInterval</code>: specifies minimal interval in seconds between capturing two images.</li>
+  <li><code class="language-plaintext highlighter-rouge">RecordOnMove</code>: specifies that do not record frame if there was vehicle’s position or orientation hasn’t changed.</li>
+  <li><code class="language-plaintext highlighter-rouge">Folder</code>: Parent folder where timestamped subfolder with recordings are created. Absolute path of the directory must be specified. If not used, then <code class="language-plaintext highlighter-rouge">Documents/AirSim</code> folder will be used. E.g. <code class="language-plaintext highlighter-rouge">"Folder": "/home/&lt;user&gt;/Documents"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Enabled</code>: Whether Recording should start from the beginning itself, setting to <code class="language-plaintext highlighter-rouge">true</code> will start recording automatically when the simulation starts. By default, it’s set to <code class="language-plaintext highlighter-rouge">false</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Cameras</code>: this element controls which cameras are used to capture images. By default scene image from camera 0 is recorded as compressed png format. This setting is json array so you can specify multiple cameras to capture images, each with potentially different <a href="settings.md#image-capture-settings">image types</a>.
+    <ul>
+      <li>When <code class="language-plaintext highlighter-rouge">PixelsAsFloat</code> is true, image is saved as <a href="pfm.md">pfm</a> file instead of png file.</li>
+      <li><code class="language-plaintext highlighter-rouge">VehicleName</code> option allows you to specify separate cameras for individual vehicles. If the <code class="language-plaintext highlighter-rouge">Cameras</code> element isn’t present, <code class="language-plaintext highlighter-rouge">Scene</code> image from the default camera of each vehicle will be recorded.</li>
+      <li>If you don’t want to record any images and just the vehicle’s physics data, then specify the <code class="language-plaintext highlighter-rouge">Cameras</code> element but leave it empty, like this: <code class="language-plaintext highlighter-rouge">"Cameras": []</code></li>
+      <li>External cameras are currently not supported in recording</li>
+    </ul>
+  </li>
+</ul>
+
+<p>For example, the <code class="language-plaintext highlighter-rouge">Cameras</code> element below records scene &amp; segmentation images for <code class="language-plaintext highlighter-rouge">Car1</code> &amp; scene for <code class="language-plaintext highlighter-rouge">Car2</code>-</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"Cameras"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"PixelsAsFloat"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Car1"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Compress"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nl">"PixelsAsFloat"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Car1"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Compress"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nl">"CameraName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"PixelsAsFloat"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">"VehicleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Car2"</span><span class="p">,</span><span class="w"> </span><span class="nl">"Compress"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Check out <a href="modify_recording_data.md">Modifying Recording Data</a> for details on how to modify the kinematics data being recorded.</p>
+
+<h2 id="clockspeed">ClockSpeed</h2>
+<p>This setting allows you to set the speed of simulation clock with respect to wall clock. For example, value of 5.0 would mean simulation clock has 5 seconds elapsed when wall clock has 1 second elapsed (i.e. simulation is running faster). The value of 0.1 means that simulation clock is 10X slower than wall clock. The value of 1 means simulation is running in real time. It is important to realize that quality of simulation may decrease as the simulation clock runs faster. You might see artifacts like object moving past obstacles because collision is not detected. However slowing down simulation clock (i.e. values &lt; 1.0) generally improves the quality of simulation.</p>
+
+<h2 id="segmentation-settings">Segmentation Settings</h2>
+<p>The <code class="language-plaintext highlighter-rouge">InitMethod</code> determines how object IDs are initialized at startup to generate <a href="image_apis.md#segmentation">segmentation</a>. The value “” or “CommonObjectsRandomIDs” (default) means assign random IDs to each object at startup. This will generate segmentation view with random colors assign to each object. The value “None” means don’t initialize object IDs. This will cause segmentation view to have single solid colors. This mode is useful if you plan to set up object IDs using <a href="image_apis.md#segmentation">APIs</a> and it can save lot of delay at startup for large environments like CityEnviron.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">OverrideExisting</code> is false then initialization does not alter non-zero object IDs already assigned otherwise it does.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">MeshNamingMethod</code> is “” or “OwnerName” then we use mesh’s owner name to generate random hash as object IDs. If it is “StaticMeshName” then we use static mesh’s name to generate random hash as object IDs. Note that it is not possible to tell individual instances of the same static mesh apart this way, but the names are often more intuitive.</p>
+
+<h2 id="wind-settings">Wind Settings</h2>
+
+<p>This setting specifies the wind speed in World frame, in NED direction. Values are in m/s. By default, speed is 0, i.e. no wind.</p>
+
+<h2 id="camera-director-settings">Camera Director Settings</h2>
+
+<p>This element specifies the settings used for the camera following the vehicle in the ViewPort.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">FollowDistance</code>: Distance at which camera follows the vehicle, default is -8 (8 meters) for Car, -3 for others.</li>
+  <li><code class="language-plaintext highlighter-rouge">X, Y, Z, Yaw, Roll, Pitch</code>: These elements allows you to specify the position and orientation of the camera relative to the vehicle. Position is in NED coordinates in SI units with origin set to Player Start location in Unreal environment. The orientation is specified in degrees.</li>
+</ul>
+
+<h2 id="camera-settings">Camera Settings</h2>
+<p>The <code class="language-plaintext highlighter-rouge">CameraDefaults</code> element at root level specifies defaults used for all cameras. These defaults can be overridden for individual camera in <code class="language-plaintext highlighter-rouge">Cameras</code> element inside <code class="language-plaintext highlighter-rouge">Vehicles</code> as described later.</p>
+
+<h3 id="note-on-imagetype-element">Note on ImageType element</h3>
+<p>The <code class="language-plaintext highlighter-rouge">ImageType</code> element in JSON array determines which image type that settings applies to. The valid values are described in <a href="image_apis.md#available-imagetype">ImageType section</a>. In addition, we also support special value <code class="language-plaintext highlighter-rouge">ImageType: -1</code> to apply the settings to external camera (i.e. what you are looking at on the screen).</p>
+
+<p>For example, <code class="language-plaintext highlighter-rouge">CaptureSettings</code> element is json array so you can add settings for multiple image types easily.</p>
+
+<h3 id="capturesettings">CaptureSettings</h3>
+<p>The <code class="language-plaintext highlighter-rouge">CaptureSettings</code> determines how different image types such as scene, depth, disparity, surface normals and segmentation views are rendered. The Width, Height and FOV settings should be self explanatory. The AutoExposureSpeed decides how fast eye adaptation works. We set to generally high value such as 100 to avoid artifacts in image capture. Similarly we set MotionBlurAmount to 0 by default to avoid artifacts in ground truth images. The <code class="language-plaintext highlighter-rouge">ProjectionMode</code> decides the projection used by the capture camera and can take value “perspective” (default) or “orthographic”. If projection mode is “orthographic” then <code class="language-plaintext highlighter-rouge">OrthoWidth</code> determines width of projected area captured in meters.</p>
+
+<p>For explanation of other settings, please see <a href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/PostProcessEffects/AutomaticExposure/">this article</a>.</p>
+
+<h3 id="noisesettings">NoiseSettings</h3>
+<p>The <code class="language-plaintext highlighter-rouge">NoiseSettings</code> allows to add noise to the specified image type with a goal of simulating camera sensor noise, interference and other artifacts. By default no noise is added, i.e., <code class="language-plaintext highlighter-rouge">Enabled: false</code>. If you set <code class="language-plaintext highlighter-rouge">Enabled: true</code> then following different types of noise and interference artifacts are enabled, each can be further tuned using setting. The noise effects are implemented as shader created as post processing material in Unreal Engine called <a href="https://github.com/Microsoft/AirSim/blob/main/Unreal/Plugins/AirSim/Content/HUDAssets/CameraSensorNoise.uasset">CameraSensorNoise</a>.</p>
+
+<p>Demo of camera noise and interference simulation:</p>
+
+<p><a href="https://youtu.be/1BeCEZmQyp0"><img src="images/camera_noise_demo.png" alt="AirSim Drone Demo Video" /></a></p>
+
+<h4 id="random-noise">Random noise</h4>
+<p>This adds random noise blobs with following parameters.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">RandContrib</code>: This determines blend ratio of noise pixel with image pixel, 0 means no noise and 1 means only noise.</li>
+  <li><code class="language-plaintext highlighter-rouge">RandSpeed</code>: This determines how fast noise fluctuates, 1 means no fluctuation and higher values like 1E6 means full fluctuation.</li>
+  <li><code class="language-plaintext highlighter-rouge">RandSize</code>: This determines how coarse noise is, 1 means every pixel has its own noise while higher value means more than 1 pixels share same noise value.</li>
+  <li><code class="language-plaintext highlighter-rouge">RandDensity</code>: This determines how many pixels out of total will have noise, 1 means all pixels while higher value means lesser number of pixels (exponentially).</li>
+</ul>
+
+<h4 id="horizontal-bump-distortion">Horizontal bump distortion</h4>
+<p>This adds horizontal bumps / flickering / ghosting effect.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">HorzWaveContrib</code>: This determines blend ratio of noise pixel with image pixel, 0 means no noise and 1 means only noise.</li>
+  <li><code class="language-plaintext highlighter-rouge">HorzWaveStrength</code>: This determines overall strength of the effect.</li>
+  <li><code class="language-plaintext highlighter-rouge">HorzWaveVertSize</code>: This determines how many vertical pixels would be effected by the effect.</li>
+  <li><code class="language-plaintext highlighter-rouge">HorzWaveScreenSize</code>: This determines how much of the screen is effected by the effect.</li>
+</ul>
+
+<h4 id="horizontal-noise-lines">Horizontal noise lines</h4>
+<p>This adds regions of noise on horizontal lines.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">HorzNoiseLinesContrib</code>: This determines blend ratio of noise pixel with image pixel, 0 means no noise and 1 means only noise.</li>
+  <li><code class="language-plaintext highlighter-rouge">HorzNoiseLinesDensityY</code>: This determines how many pixels in horizontal line gets affected.</li>
+  <li><code class="language-plaintext highlighter-rouge">HorzNoiseLinesDensityXY</code>: This determines how many lines on screen gets affected.</li>
+</ul>
+
+<h4 id="horizontal-line-distortion">Horizontal line distortion</h4>
+<p>This adds fluctuations on horizontal line.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">HorzDistortionContrib</code>: This determines blend ratio of noise pixel with image pixel, 0 means no noise and 1 means only noise.</li>
+  <li><code class="language-plaintext highlighter-rouge">HorzDistortionStrength</code>: This determines how large is the distortion.</li>
+</ul>
+
+<h3 id="gimbal">Gimbal</h3>
+<p>The <code class="language-plaintext highlighter-rouge">Gimbal</code> element allows to freeze camera orientation for pitch, roll and/or yaw. This setting is ignored unless <code class="language-plaintext highlighter-rouge">ImageType</code> is -1. The <code class="language-plaintext highlighter-rouge">Stabilization</code> is defaulted to 0 meaning no gimbal i.e. camera orientation changes with body orientation on all axis. The value of 1 means full stabilization. The value between 0 to 1 acts as a weight for fixed angles specified (in degrees, in world-frame) in <code class="language-plaintext highlighter-rouge">Pitch</code>, <code class="language-plaintext highlighter-rouge">Roll</code> and <code class="language-plaintext highlighter-rouge">Yaw</code> elements and orientation of the vehicle body. When any of the angles is omitted from json or set to NaN, that angle is not stabilized (i.e. it moves along with vehicle body).</p>
+
+<h3 id="unrealengine">UnrealEngine</h3>
+<p>This element contains settings specific to the Unreal Engine. These will be ignored in the Unity project.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PixelFormatOverride</code>: This contains a list of elements that have both a <code class="language-plaintext highlighter-rouge">ImageType</code> and <code class="language-plaintext highlighter-rouge">PixelFormat</code> setting. Each element allows you to override the default pixel format of the UTextureRenderTarget2D object instantiated for the capture specified by the <code class="language-plaintext highlighter-rouge">ImageType</code> setting. Specifying this element allows you to prevent crashes caused by unexpected pixel formats (see <a href="https://github.com/microsoft/AirSim/issues/4120">#4120</a> and <a href="https://github.com/microsoft/AirSim/issues/4339">#4339</a> for examples of these crashes). A full list of pixel formats can be viewed <a href="https://docs.unrealengine.com/4.27/en-US/API/Runtime/Core/EPixelFormat/">here</a>.</li>
+</ul>
+
+<h2 id="external-cameras">External Cameras</h2>
+<p>This element allows specifying cameras which are separate from the cameras attached to the vehicle, such as a CCTV camera. These are fixed cameras, and don’t move along with the vehicles. The key in the element is the name of the camera, and the value i.e. settings are the same as <code class="language-plaintext highlighter-rouge">CameraDefaults</code> described above. All the camera APIs work with external cameras, including capturing images, changing the pose, etc by passing the parameter <code class="language-plaintext highlighter-rouge">external=True</code> in the API call.</p>
+
+<h2 id="vehicles-settings">Vehicles Settings</h2>
+<p>Each simulation mode will go through the list of vehicles specified in this setting and create the ones that has <code class="language-plaintext highlighter-rouge">"AutoCreate": true</code>. Each vehicle specified in this setting has key which becomes the name of the vehicle. If <code class="language-plaintext highlighter-rouge">"Vehicles"</code> element is missing then this list is populated with default car named “PhysXCar” and default multirotor named “SimpleFlight”.</p>
+
+<h3 id="common-vehicle-setting">Common Vehicle Setting</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">VehicleType</code>: This could be any one of the following - <code class="language-plaintext highlighter-rouge">PhysXCar</code>, <code class="language-plaintext highlighter-rouge">SimpleFlight</code>, <code class="language-plaintext highlighter-rouge">PX4Multirotor</code>, <code class="language-plaintext highlighter-rouge">ComputerVision</code>, <code class="language-plaintext highlighter-rouge">ArduCopter</code> &amp; <code class="language-plaintext highlighter-rouge">ArduRover</code>. There is no default value therefore this element must be specified.</li>
+  <li><code class="language-plaintext highlighter-rouge">PawnPath</code>: This allows to override the pawn blueprint to use for the vehicle. For example, you may create new pawn blueprint derived from ACarPawn for a warehouse robot in your own project outside the AirSim code and then specify its path here. See also <a href="settings.md#PawnPaths">PawnPaths</a>. Note that you have to specify your custom pawn blueprint class path inside the global <code class="language-plaintext highlighter-rouge">PawnPaths</code> object using your proprietarily defined object name, and quote that name inside the <code class="language-plaintext highlighter-rouge">Vehicles</code> setting. For example,
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+    </span><span class="nl">"PawnPaths"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"CustomPawn"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"PawnBP"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Class'/Game/Assets/Blueprints/MyPawn.MyPawn_C'"</span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"MyVehicle"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"PawnPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CustomPawn"</span><span class="p">,</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">DefaultVehicleState</code>: Possible value for multirotors is <code class="language-plaintext highlighter-rouge">Armed</code> or <code class="language-plaintext highlighter-rouge">Disarmed</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">AutoCreate</code>: If true then this vehicle would be spawned (if supported by selected sim mode).</li>
+  <li><code class="language-plaintext highlighter-rouge">RC</code>: This sub-element allows to specify which remote controller to use for vehicle using <code class="language-plaintext highlighter-rouge">RemoteControlID</code>. The value of -1 means use keyboard (not supported yet for multirotors). The value &gt;= 0 specifies one of many remote controllers connected to the system. The list of available RCs can be seen in Game Controllers panel in Windows, for example.</li>
+  <li><code class="language-plaintext highlighter-rouge">X, Y, Z, Yaw, Roll, Pitch</code>: These elements allows you to specify the initial position and orientation of the vehicle. Position is in NED coordinates in SI units with origin set to Player Start location in Unreal environment. The orientation is specified in degrees.</li>
+  <li><code class="language-plaintext highlighter-rouge">IsFpvVehicle</code>: This setting allows to specify which vehicle camera will follow and the view that will be shown when ViewMode is set to Fpv. By default, AirSim selects the first vehicle in settings as FPV vehicle.</li>
+  <li><code class="language-plaintext highlighter-rouge">Sensors</code>: This element specifies the sensors associated with the vehicle, see <a href="sensors.md">Sensors page</a> for details.</li>
+  <li><code class="language-plaintext highlighter-rouge">Cameras</code>: This element specifies camera settings for vehicle. The key in this element is name of the <a href="image_apis.md#available_cameras">available camera</a> and the value is same as <code class="language-plaintext highlighter-rouge">CameraDefaults</code> as described above. For example, to change FOV for the front center camera to 120 degrees, you can use this for <code class="language-plaintext highlighter-rouge">Vehicles</code> setting:</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"FishEyeDrone"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SimpleFlight"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Cameras"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"front-center"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"CaptureSettings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"ImageType"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"FOV_Degrees"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="using-px4">Using PX4</h3>
+<p>By default we use <a href="simple_flight.md">simple_flight</a> so you don’t have to do separate HITL or SITL setups. We also support <a href="px4_setup.md">“PX4”</a> for advanced users. To use PX4 with AirSim, you can use the following for <code class="language-plaintext highlighter-rouge">Vehicles</code> setting:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Vehicles": {
+    "PX4": {
+      "VehicleType": "PX4Multirotor",
+    }
+}
+</code></pre></div></div>
+
+<h4 id="additional-px4-settings">Additional PX4 Settings</h4>
+
+<p>The defaults for PX4 is to enable hardware-in-loop setup. There are various other settings available for PX4 as follows with their default values:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Vehicles": {
+    "PX4": {
+      "VehicleType": "PX4Multirotor",
+      "Lockstep": true,
+      "ControlIp": "127.0.0.1",
+      "ControlPortLocal": 14540,
+      "ControlPortRemote": 14580,
+      "LogViewerHostIp": "127.0.0.1",
+      "LogViewerPort": 14388,
+      "OffboardCompID": 1,
+      "OffboardSysID": 134,
+      "QgcHostIp": "127.0.0.1",
+      "QgcPort": 14550,
+      "SerialBaudRate": 115200,
+      "SerialPort": "*",
+      "SimCompID": 42,
+      "SimSysID": 142,
+      "TcpPort": 4560,
+      "UdpIp": "127.0.0.1",
+      "UdpPort": 14560,
+      "UseSerial": true,
+      "UseTcp": false,
+      "VehicleCompID": 1,
+      "VehicleSysID": 135,
+      "Model": "Generic",
+      "LocalHostIp": "127.0.0.1",
+      "Logs": "d:\\temp\\mavlink",
+      "Sensors": {
+        ...
+      }
+      "Parameters": {
+        ...
+      }
+    }
+}
+</code></pre></div></div>
+
+<p>These settings define the MavLink SystemId and ComponentId for the Simulator (SimSysID, SimCompID),
+and for the vehicle (VehicleSysID, VehicleCompID) and the node that allows remote control of the
+drone from another app this is called the offboard node (OffboardSysID, OffboardCompID).</p>
+
+<p>If you want the simulator to also forward mavlink messages to your ground control app (like
+QGroundControl) you can also set the UDP address for that in case you want to run that on a
+different machine (QgcHostIp, QgcPort).  The default is local host so QGroundControl should “just
+work” if it is running on the same machine.</p>
+
+<p>You can connect the simulator to the LogViewer app, provided in this repo, by setting the UDP
+address for that (LogViewerHostIp, LogViewerPort).</p>
+
+<p>And for each flying drone added to the simulator there is a named block of additional settings.  In
+the above you see the default name “PX4”.   You can change this name from the Unreal Editor when you
+add a new BP_FlyingPawn asset.  You will see these properties grouped under the category “MavLink”.
+The MavLink node for this pawn can be remote over UDP or it can be connected to a local serial port.
+If serial then set UseSerial to true, otherwise set UseSerial to false.  For serial connections you
+also need to set the appropriate SerialBaudRate.  The default of 115200 works with Pixhawk version 2
+over USB.</p>
+
+<p>When communicating with the PX4 drone over serial port both the HIL_* messages and vehicle control
+messages share the same serial port. When communicating over UDP or TCP PX4 requires two separate
+channels.  If UseTcp is false, then UdpIp, UdpPort are used to send HIL_* messages, otherwise the
+TcpPort is used.  TCP support in PX4 was added in 1.9.2 with the <code class="language-plaintext highlighter-rouge">lockstep</code> feature because the
+guarantee of message delivery that TCP provides is required for the proper functioning of lockstep.
+AirSim becomes a TCP server in that case, and waits for a connection from the PX4 app.  The second
+channel for controlling the vehicle is defined by (ControlIp, ControlPort) and is always a UDP
+channel.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">Sensors</code> section can provide customized settings for simulated sensors, see
+<a href="sensors.md">Sensors</a>. The <code class="language-plaintext highlighter-rouge">Parameters</code> section can set PX4 parameters during initialization of the
+PX4 connection. See <a href="px4_sitl.md">Setting up PX4 Software-in-Loop</a> for an example.</p>
+
+<h3 id="using-ardupilot">Using ArduPilot</h3>
+
+<p><a href="https://ardupilot.org/">ArduPilot</a> Copter &amp; Rover vehicles are supported in latest AirSim main branch &amp; releases <code class="language-plaintext highlighter-rouge">v1.3.0</code> and later. For settings and how to use, please see <a href="https://ardupilot.org/dev/docs/sitl-with-airsim.html">ArduPilot SITL with AirSim</a></p>
+
+<h2 id="other-settings">Other Settings</h2>
+
+<h3 id="enginesound">EngineSound</h3>
+<p>To turn off the engine sound use <a href="settings.md">setting</a> <code class="language-plaintext highlighter-rouge">"EngineSound": false</code>. Currently this setting applies only to car.</p>
+
+<h3 id="pawnpaths">PawnPaths</h3>
+<p>This allows you to specify your own vehicle pawn blueprints, for example, you can replace the default car in AirSim with your own car. Your vehicle BP can reside in Content folder of your own Unreal project (i.e. outside of AirSim plugin folder). For example, if you have a car BP located in file <code class="language-plaintext highlighter-rouge">Content\MyCar\MySedanBP.uasset</code> in your project then you can set <code class="language-plaintext highlighter-rouge">"DefaultCar": {"PawnBP":"Class'/Game/MyCar/MySedanBP.MySedanBP_C'"}</code>. The <code class="language-plaintext highlighter-rouge">XYZ.XYZ_C</code> is a special notation required to specify class for BP <code class="language-plaintext highlighter-rouge">XYZ</code>. Please note that your BP must be derived from CarPawn class. By default this is not the case but you can re-parent the BP using the “Class Settings” button in toolbar in UE editor after you open the BP and then choosing “Car Pawn” for Parent Class settings in Class Options. It is also a good idea to disable “Auto Possess Player” and “Auto Possess AI” as well as set AI Controller Class to None in BP details. Please make sure your asset is included for cooking in packaging options if you are creating binary.</p>
+
+<h3 id="physicsenginename">PhysicsEngineName</h3>
+<p>For cars, we support only PhysX for now (regardless of value in this setting). For multirotors, we support <code class="language-plaintext highlighter-rouge">"FastPhysicsEngine"</code> and <code class="language-plaintext highlighter-rouge">"ExternalPhysicsEngine"</code>. <code class="language-plaintext highlighter-rouge">"ExternalPhysicsEngine"</code> allows the drone to be controlled via setVehiclePose (), keeping the drone in place until the next call. It is especially useful for moving the AirSim drone using an external simulator or on a saved path.</p>
+
+<h3 id="localhostip-setting">LocalHostIp Setting</h3>
+<p>Now when connecting to remote machines you may need to pick a specific Ethernet adapter to reach those machines, for example, it might be
+over Ethernet or over Wi-Fi, or some other special virtual adapter or a VPN.  Your PC may have multiple networks, and those networks might not
+be allowed to talk to each other, in which case the UDP messages from one network will not get through to the others.</p>
+
+<p>So the LocalHostIp allows you to configure how you are reaching those machines.  The default of 127.0.0.1 is not able to reach external machines,
+this default is only used when everything you are talking to is contained on a single PC.</p>
+
+<h3 id="apiserverport">ApiServerPort</h3>
+<p>This setting determines the server port that used by airsim clients, default port is 41451.
+By specifying different ports, the user can run multiple environments in parallel to accelerate data collection process.</p>
+
+<h3 id="speedunitfactor">SpeedUnitFactor</h3>
+<p>Unit conversion factor for speed related to <code class="language-plaintext highlighter-rouge">m/s</code>, default is 1. Used in conjunction with SpeedUnitLabel. This may be only used for display purposes for example on-display speed when car is being driven. For example, to get speed in <code class="language-plaintext highlighter-rouge">miles/hr</code> use factor 2.23694.</p>
+
+<h3 id="speedunitlabel">SpeedUnitLabel</h3>
+<p>Unit label for speed, default is <code class="language-plaintext highlighter-rouge">m/s</code>.  Used in conjunction with SpeedUnitFactor.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

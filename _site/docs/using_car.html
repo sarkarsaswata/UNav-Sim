@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>How to Use Car in AirSim | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="How to Use Car in AirSim" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/using_car.html" />
+<meta property="og:url" content="http://localhost:4000/docs/using_car.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="How to Use Car in AirSim" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/using_car.html","headline":"How to Use Car in AirSim","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="how-to-use-car-in-airsim">How to Use Car in AirSim</h1>
+
+<p>By default AirSim prompts user for which vehicle to use. You can easily change this by setting <a href="settings.md#SimMode">SimMode</a>. For example, if you want to use car instead then just set the SimMode in your <a href="settings.md">settings.json</a> which you can find in your <code class="language-plaintext highlighter-rouge">~/Documents/AirSim</code> folder, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "SettingsVersion": 1.2,
+  "SimMode": "Car"
+}
+</code></pre></div></div>
+
+<p>Now when you restart AirSim, you should see the car spawned automatically.</p>
+
+<h2 id="manual-driving">Manual Driving</h2>
+<p>Please use the keyboard arrow keys to drive manually. Spacebar for the handbrake. In manual drive mode, gears are set in “auto”.</p>
+
+<h2 id="using-apis">Using APIs</h2>
+<p>You can control the car, get state and images by calling APIs in variety of client languages including C++ and Python. Please see <a href="apis.md">APIs doc</a> for more details.</p>
+
+<h2 id="changing-views">Changing Views</h2>
+<p>By default camera will chase the car from the back. You can get the FPV view by pressing <code class="language-plaintext highlighter-rouge">F</code> key and switch back to chasing from back view by pressing <code class="language-plaintext highlighter-rouge">/</code> key. More keyboard shortcuts can be seen by pressing F1.</p>
+
+<h2 id="cameras">Cameras</h2>
+<p>By default car is installed with 5 cameras: center, left and right, driver and reverse. You can chose the images from these camera by specifying <a href="image_apis.md#available_cameras">the name</a>.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

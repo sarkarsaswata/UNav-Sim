@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Implementing a Drone Survey script | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Implementing a Drone Survey script" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/drone_survey.html" />
+<meta property="og:url" content="http://localhost:4000/docs/drone_survey.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Implementing a Drone Survey script" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/drone_survey.html","headline":"Implementing a Drone Survey script","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="implementing-a-drone-survey-script">Implementing a Drone Survey script</h1>
+
+<p>Moved here from <a href="https://github.com/microsoft/AirSim/wiki/Implementing-a-Drone-Survey-script">https://github.com/microsoft/AirSim/wiki/Implementing-a-Drone-Survey-script</a></p>
+
+<p>Ever wanted to capture a bunch of top-down pictures of a certain location? Well, the Python API makes this really simple.  See the <a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/survey.py">code available here</a>.</p>
+
+<p><img src="images/survey.png" alt="survey" /></p>
+
+<p>Let’s assume we want the following variables:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>boxsize</td>
+      <td>The overall size of the square box to survey</td>
+    </tr>
+    <tr>
+      <td>stripewidth</td>
+      <td>How far apart to drive the swim lanes, this can depend on the type of camera lens, for example.</td>
+    </tr>
+    <tr>
+      <td>altitude</td>
+      <td>The height to fly the survey.</td>
+    </tr>
+    <tr>
+      <td>speed</td>
+      <td>The speed of the survey can depend on how fast your camera can snap shots.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>So with these we can compute a square path box using this code:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span><span class="p">:</span>
+            <span class="n">distance</span> <span class="o">+=</span> <span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span>
+            <span class="n">path</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vector3r</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="bp">self</span><span class="p">.</span><span class="n">stripewidth</span>
+            <span class="n">distance</span> <span class="o">+=</span> <span class="bp">self</span><span class="p">.</span><span class="n">stripewidth</span>
+            <span class="n">path</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vector3r</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">distance</span> <span class="o">+=</span> <span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span>
+            <span class="n">path</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vector3r</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="bp">self</span><span class="p">.</span><span class="n">stripewidth</span>
+            <span class="n">distance</span> <span class="o">+=</span> <span class="bp">self</span><span class="p">.</span><span class="n">stripewidth</span>
+            <span class="n">path</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vector3r</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">distance</span> <span class="o">+=</span> <span class="bp">self</span><span class="p">.</span><span class="n">boxsize</span>
+</code></pre></div></div>
+<p>Assuming we start in the corner of the box, increment x by the stripe width, then fly the full y-dimension of <code class="language-plaintext highlighter-rouge">-boxsize</code> to <code class="language-plaintext highlighter-rouge">+boxsize</code>, so in this case, <code class="language-plaintext highlighter-rouge">boxsize</code> is half the size of the actual box we will be covering.</p>
+
+<p>Once we have this list of Vector3r objects, we can fly this path very simply with the following call:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">client</span><span class="p">.</span><span class="n">moveOnPath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">velocity</span><span class="p">,</span> <span class="n">trip_time</span><span class="p">,</span> <span class="n">DrivetrainType</span><span class="p">.</span><span class="n">ForwardOnly</span><span class="p">,</span>
+                                <span class="n">YawMode</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">lookahead</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We can compute an appropriate <code class="language-plaintext highlighter-rouge">trip_time</code> timeout by dividing the distance of the path and the speed we are flying.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">lookahead</code> needed here for smooth path interpolation can be computed from the velocity using <code class="language-plaintext highlighter-rouge">self.velocity + (self.velocity/2)</code>.  The more lookahead, the smoother the turns.  This is why you see in the screenshot that the ends of each swimland are smooth turns rather than a square box pattern.  This can result in a smoother video from your camera also.</p>
+
+<p>That’s it, pretty simple, eh?</p>
+
+<p>Now of course you can add a lot more intelligence to this, make it avoid known obstacles on your map, make it climb up and down a hillside so you can survey a slope, etc.  Lots of fun to be had.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

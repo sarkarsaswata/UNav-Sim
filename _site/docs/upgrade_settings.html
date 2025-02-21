@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Upgrading Settings | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Upgrading Settings" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/upgrade_settings.html" />
+<meta property="og:url" content="http://localhost:4000/docs/upgrade_settings.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Upgrading Settings" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/upgrade_settings.html","headline":"Upgrading Settings","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="upgrading-settings">Upgrading Settings</h1>
+
+<p>The settings schema in AirSim 1.2 is changed for more flexibility and cleaner interface. If you have older <a href="settings.md">settings.json</a> file then you can either delete it and restart AirSim or use this guide to make manual upgrade.</p>
+
+<h2 id="quicker-way">Quicker Way</h2>
+<p>We recommend simply deleting the <a href="settings.md">settings.json</a> and add back the settings you need.
+Please see <a href="settings.md">the doc</a> for complete information on available settings.</p>
+
+<h2 id="changes">Changes</h2>
+
+<h3 id="usagescenario">UsageScenario</h3>
+<p>Previously we used <code class="language-plaintext highlighter-rouge">UsageScenario</code> to specify the <code class="language-plaintext highlighter-rouge">ComputerVision</code> mode. Now we use <code class="language-plaintext highlighter-rouge">"SimMode": "ComputerVision"</code> instead.</p>
+
+<h3 id="cameradefaults-and-changing-camera-settings">CameraDefaults and Changing Camera Settings</h3>
+<p>Previously we had <code class="language-plaintext highlighter-rouge">CaptureSettings</code> and <code class="language-plaintext highlighter-rouge">NoiseSettings</code> in root. Now these are combined in new <code class="language-plaintext highlighter-rouge">CameraDefaults</code> element. The <a href="settings.md#camera_settings">schema for this element</a> is later used to configure cameras on vehicle.</p>
+
+<h3 id="gimbal">Gimbal</h3>
+<p>The <a href="settings.md#Gimbal">Gimbal element</a> (instead of old Gimble element) is now moved out of <code class="language-plaintext highlighter-rouge">CaptureSettings</code>.</p>
+
+<h3 id="cameraid-to-cameraname">CameraID to CameraName</h3>
+<p>All settings now reference cameras by <a href="image_apis.md#available_cameras">name</a> instead of ID.</p>
+
+<h3 id="using-px4">Using PX4</h3>
+<p>The new Vehicles element allows to specify which vehicles to create. To use PX4, please see <a href="settings.md#using_px4">this section</a>.</p>
+
+<h3 id="additionalcameras">AdditionalCameras</h3>
+<p>The old <code class="language-plaintext highlighter-rouge">AdditionalCameras</code> setting is now replaced by <a href="settings.md#Common_Vehicle_Setting">Cameras element</a> within vehicle setting.</p>
+
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

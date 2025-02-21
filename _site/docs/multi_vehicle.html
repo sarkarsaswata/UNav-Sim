@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Multiple Vehicles in AirSim | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Multiple Vehicles in AirSim" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/multi_vehicle.html" />
+<meta property="og:url" content="http://localhost:4000/docs/multi_vehicle.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Multiple Vehicles in AirSim" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/multi_vehicle.html","headline":"Multiple Vehicles in AirSim","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="multiple-vehicles-in-airsim">Multiple Vehicles in AirSim</h1>
+
+<p>Since release 1.2, AirSim is fully enabled for multiple vehicles. This capability allows you to create multiple vehicles easily and use APIs to control them.</p>
+
+<h2 id="creating-multiple-vehicles">Creating Multiple Vehicles</h2>
+
+<p>It’s as easy as specifying them in <a href="settings.md">settings.json</a>. The <code class="language-plaintext highlighter-rouge">Vehicles</code> element allows you to specify list of vehicles you want to create along with their initial positions and orientations. The positions are specified in NED coordinates in SI units with origin set at Player Start component in Unreal environment. The orientation is specified as Yaw, Pitch and Roll in degrees.</p>
+
+<h3 id="creating-multiple-cars">Creating Multiple Cars</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"SettingsVersion"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"SimMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Car"</span><span class="p">,</span><span class="w">
+
+	</span><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		</span><span class="nl">"Car1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		  </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PhysXCar"</span><span class="p">,</span><span class="w">
+		  </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="mi">-2</span><span class="w">
+		</span><span class="p">},</span><span class="w">
+		</span><span class="nl">"Car2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		  </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PhysXCar"</span><span class="p">,</span><span class="w">
+		  </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="mi">-4</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="mi">-2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Yaw"</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="w">
+		</span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="creating-multiple-drones">Creating Multiple Drones</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+	</span><span class="nl">"SettingsVersion"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+	</span><span class="nl">"SimMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Multirotor"</span><span class="p">,</span><span class="w">
+
+	</span><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		</span><span class="nl">"Drone1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		  </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SimpleFlight"</span><span class="p">,</span><span class="w">
+		  </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="mi">-2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Yaw"</span><span class="p">:</span><span class="w"> </span><span class="mi">-180</span><span class="w">
+		</span><span class="p">},</span><span class="w">
+		</span><span class="nl">"Drone2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		  </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SimpleFlight"</span><span class="p">,</span><span class="w">
+		  </span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="mi">-2</span><span class="w">
+		</span><span class="p">}</span><span class="w">
+
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="using-apis-for-multiple-vehicles">Using APIs for Multiple Vehicles</h2>
+
+<p>The new APIs since AirSim 1.2 allows you to specify <code class="language-plaintext highlighter-rouge">vehicle_name</code>. This name corresponds to keys in json settings (for example, Car1 or Drone2 above).</p>
+
+<p><a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/car/multi_agent_car.py">Example code for cars</a></p>
+
+<p><a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/multi_agent_drone.py">Example code for multirotors</a></p>
+
+<p>Using APIs for multi-vehicles requires specifying the <code class="language-plaintext highlighter-rouge">vehicle_name</code>, which needs to be hardcoded in the script or requires parsing of the settings file. There’s also a simple API <code class="language-plaintext highlighter-rouge">listVehicles()</code> which returns a list (vector in C++) of strings containing names of the current vehicles. For example, with the above settings for 2 Cars -</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">client</span><span class="p">.</span><span class="n">listVehicles</span><span class="p">()</span>
+<span class="p">[</span><span class="s">'Car1'</span><span class="p">,</span> <span class="s">'Car2'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="demo">Demo</h3>
+
+<p><a href="https://youtu.be/35dgcuLuF5M"><img src="images/demo_multi_vehicles.png" alt="AirSimMultiple Vehicles Demo Video" /></a></p>
+
+<h3 id="creating-vehicles-at-runtime-through-api">Creating vehicles at runtime through API</h3>
+
+<p>In the latest main branch of AirSim, the <code class="language-plaintext highlighter-rouge">simAddVehicle</code> API can be used to create vehicles at runtime. This is useful to create many such vehicles without needing to specify them in the settings. There are some limitations of this currently, described below -</p>
+
+<p><code class="language-plaintext highlighter-rouge">simAddVehicle</code> takes in the following arguments:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">vehicle_name</code>: Name of the vehicle to be created, this should be unique for each vehicle including any exisiting ones defined in the settings.json</li>
+  <li><code class="language-plaintext highlighter-rouge">vehicle_type</code>: Type of vehicle, e.g. “simpleflight”. Currently only SimpleFlight, PhysXCar, ComputerVision are supported, in their respective SimModes.
+                Other vehicle types including PX4 and ArduPilot-related aren’t supported</li>
+  <li><code class="language-plaintext highlighter-rouge">pose</code>: Initial pose of the vehicle</li>
+  <li><code class="language-plaintext highlighter-rouge">pawn_path</code>: Vehicle blueprint path, default empty wbich uses the default blueprint for the vehicle type</li>
+</ul>
+
+<p>Returns: <code class="language-plaintext highlighter-rouge">bool</code> Whether vehicle was created</p>
+
+<p>The usual APIs can be used to control and interact with the vehicle once created, with the <code class="language-plaintext highlighter-rouge">vehicle_name</code> parameter. Specifying other settings such as additional cameras, etc. isn’t possible currently, a future enhancement could be passing JSON string of settings for the vehicle. It also works with the <code class="language-plaintext highlighter-rouge">listVehicles()</code> API described above, so the vehicles spawned would be included in the list.</p>
+
+<p>For some examples, check out <a href="https://github.com/microsoft/AirSim/blob/main/HelloSpawnedDrones/HelloSpawnedDrones.cpp">HelloSpawnedDrones.cpp</a> -</p>
+
+<p><img src="images/HelloSpawnedDrones.gif" alt="HelloSpawnedDrones" /></p>
+
+<p>And <a href="https://github.com/microsoft/AirSim/tree/main/PythonClient/car/runtime_car.py">runtime_car.py</a> -</p>
+
+<p><img src="images/simAddVehicle_Car.gif" alt="runtime_car" /></p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

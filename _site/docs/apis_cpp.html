@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Using C++ APIs for AirSim | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Using C++ APIs for AirSim" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/apis_cpp.html" />
+<meta property="og:url" content="http://localhost:4000/docs/apis_cpp.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Using C++ APIs for AirSim" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/apis_cpp.html","headline":"Using C++ APIs for AirSim","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="using-c-apis-for-airsim">Using C++ APIs for AirSim</h1>
+
+<p>Please read <a href="apis.md">general API doc</a> first if you haven’t already. This document describes C++ examples and other C++ specific details.</p>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<p>Fastest way to get started is to open AirSim.sln in Visual Studio 2019. You will see <a href="https://github.com/Microsoft/AirSim/tree/main/HelloCar/">Hello Car</a> and <a href="https://github.com/Microsoft/AirSim/tree/main/HelloDrone/">Hello Drone</a> examples in the solution. These examples will show you the include paths and lib paths you will need to setup in your VC++ projects. If you are using Linux then you will specify these paths either in your <a href="https://github.com/Microsoft/AirSim/tree/main/cmake//HelloCar/CMakeLists.txt">cmake file</a> or on compiler command line.</p>
+
+<h4 id="include-and-lib-folders">Include and Lib Folders</h4>
+
+<ul>
+  <li>Include folders: <code class="language-plaintext highlighter-rouge">$(ProjectDir)..\AirLib\deps\rpclib\include;include;$(ProjectDir)..\AirLib\deps\eigen3;$(ProjectDir)..\AirLib\include</code></li>
+  <li>Dependencies: <code class="language-plaintext highlighter-rouge">rpc.lib</code></li>
+  <li>Lib folders: <code class="language-plaintext highlighter-rouge">$(ProjectDir)\..\AirLib\deps\MavLinkCom\lib\$(Platform)\$(Configuration);$(ProjectDir)\..\AirLib\deps\rpclib\lib\$(Platform)\$(Configuration);$(ProjectDir)\..\AirLib\lib\$(Platform)\$(Configuration)</code></li>
+  <li>References: Reference AirLib and MavLinkCom to the project references. (Right click your project then go to <code class="language-plaintext highlighter-rouge">References</code>, <code class="language-plaintext highlighter-rouge">Add reference...</code>, and then select AirLib and MavLinkCom)</li>
+</ul>
+
+<h2 id="hello-car">Hello Car</h2>
+
+<p>Here’s how to use AirSim APIs using C++ to control simulated car (see also <a href="apis.md#hello_car">Python example</a>):</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// ready to run example: https://github.com/Microsoft/AirSim/blob/main/HelloCar/main.cpp</span>
+
+<span class="cp">#include &lt;iostream&gt;
+#include "vehicles/car/api/CarRpcLibClient.hpp"
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">msr</span><span class="o">::</span><span class="n">airlib</span><span class="o">::</span><span class="n">CarRpcLibClient</span> <span class="n">client</span><span class="p">;</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">enableApiControl</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span> <span class="c1">//this disables manual control</span>
+    <span class="n">CarControllerBase</span><span class="o">::</span><span class="n">CarControls</span> <span class="n">controls</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press enter to drive forward"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">controls</span><span class="p">.</span><span class="n">throttle</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">setCarControls</span><span class="p">(</span><span class="n">controls</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to activate handbrake"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">controls</span><span class="p">.</span><span class="n">handbrake</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">setCarControls</span><span class="p">(</span><span class="n">controls</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to take turn and drive backward"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">controls</span><span class="p">.</span><span class="n">handbrake</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">controls</span><span class="p">.</span><span class="n">throttle</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">controls</span><span class="p">.</span><span class="n">steering</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">setCarControls</span><span class="p">(</span><span class="n">controls</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to stop"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">setCarControls</span><span class="p">(</span><span class="n">CarControllerBase</span><span class="o">::</span><span class="n">CarControls</span><span class="p">());</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="hello-drone">Hello Drone</h2>
+
+<p>Here’s how to use AirSim APIs using C++ to control simulated quadrotor (see also <a href="apis.md#hello_drone">Python example</a>):</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// ready to run example: https://github.com/Microsoft/AirSim/blob/main/HelloDrone/main.cpp</span>
+
+<span class="cp">#include &lt;iostream&gt;
+#include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">msr</span><span class="o">::</span><span class="n">airlib</span><span class="o">::</span><span class="n">MultirotorRpcLibClient</span> <span class="n">client</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to enable API control</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">enableApiControl</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to arm the drone</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">armDisarm</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to takeoff</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">takeoffAsync</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">waitOnLastTask</span><span class="p">();</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to move 5 meters in x direction with 1 m/s velocity</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">position</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">getMultirotorState</span><span class="p">().</span><span class="n">getPosition</span><span class="p">();</span> <span class="c1">// from current location</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">moveToPositionAsync</span><span class="p">(</span><span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span><span class="p">(),</span> <span class="n">position</span><span class="p">.</span><span class="n">z</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">waitOnLastTask</span><span class="p">();</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Press Enter to land</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span> <span class="n">std</span><span class="o">::</span><span class="n">cin</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">landAsync</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">waitOnLastTask</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="see-also">See Also</h2>
+
+<ul>
+  <li><a href="https://github.com/microsoft/AirSim/tree/main/Examples">Examples</a> of how to use internal infrastructure in AirSim in your other projects</li>
+  <li><a href="https://github.com/microsoft/AirSim/tree/main/DroneShell">DroneShell</a> app shows how to make simple interface using C++ APIs to control drones</li>
+  <li><a href="https://github.com/microsoft/AirSim/tree/main/HelloSpawnedDrones">HelloSpawnedDrones</a> app shows how to make additional vehicles on the fly</li>
+  <li><a href="apis.md">Python APIs</a></li>
+</ul>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

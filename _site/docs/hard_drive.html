@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Busy Hard Drive | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Busy Hard Drive" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/hard_drive.html" />
+<meta property="og:url" content="http://localhost:4000/docs/hard_drive.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Busy Hard Drive" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/hard_drive.html","headline":"Busy Hard Drive","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="busy-hard-drive">Busy Hard Drive</h1>
+
+<p>It is not required, but we recommend running your Unreal Environment on a Solid State Drive (SSD). 
+Between debugging, logging, and Unreal asset loading
+the hard drive can become your bottle neck.  It is normal that your hard drive will be slammed while Unreal is loading
+the environment, but if your hard drive performance looks like this while the Unreal game is running
+then you will probably not get a good flying experience.</p>
+
+<p><img src="images/busy_hard_drive.png" alt="Busy Hard Drive" /></p>
+
+<p>In fact, if the hard drive is this busy, chances are the drone will not fly properly at all.
+For some unknown reason this I/O bottle neck also interferes with the drone control loop and if that
+loop doesn’t run at a high rate (300-500 Hz) then the drone will not fly.  Not surprising, the control
+loop inside the PX4 firmware that runs on a Pixhawk flight controller runs at 1000 Hz.</p>
+
+<h3 id="reducing-io">Reducing I/O</h3>
+
+<p>If you can’t whip off to Fry’s Electronics and pick up an overpriced super fast SSD this weekend, then the 
+following steps can be taken to reduce the hard drive I/O:</p>
+
+<ol>
+  <li>First run the Unreal Environment using Cooked content outside of the UE Editor or any debugging environment,
+and package the content to your fastest SSD drive.  You can do that using this menu option:</li>
+</ol>
+
+<p><img src="images/package_unreal.png" alt="Package Unreal Project" /></p>
+
+<ol>
+  <li>If you must use the UE editor (because you are actively modifying game assets), then at least
+don’t run that in a debugger.  If you are using Visual Studio use start without debugging.</li>
+  <li>If you must debug the app, and you are using Visual Studio debugger, stop then Visual Studio from 
+logging Intellitrace information.<br />
+Go to Tools/Options/Debugging/Intellitrace, and turn off the main checkbox.</li>
+  <li>Turn off any <a href="https://docs.unrealengine.com/latest/INT/Gameplay/Analytics/index.html">Unreal Analytics</a>
+that your environment may have enabled, especially any file logging.</li>
+</ol>
+
+<h3 id="io-from-page-faults">I/O from Page Faults</h3>
+
+<p>If your system is running out of RAM it may start paging memory to disk.  If your operating system has
+enabled paging to disk, make sure it is paging to your fastest SSD.  Or if you have enough RAM disable
+paging all together.  In fact, if you disable paging and the game stops working you will know for sure
+you are running out of RAM.</p>
+
+<p>Obviously, shutting down any other unnecessary apps should also free up memory so you don’t run out.</p>
+
+<h3 id="ideal-runtime-performance">Ideal Runtime performance</h3>
+
+<p>This is what my slow hard drive looks like when flying from UE editor.  You can see it’s very busy,
+but the drone still flies ok:</p>
+
+<p><img src="images/ue_hard_drive.png" alt="Package Unreal Project" /></p>
+
+<p>This is what my fast  SSD looks like when the drone is flying in an Unreal Cooked app 
+(no UE editor, no debugger).  Not surprisingly it is flying perfectly in this case:</p>
+
+<p><img src="images/cooked_ssd.png" alt="Package Unreal Project" /></p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

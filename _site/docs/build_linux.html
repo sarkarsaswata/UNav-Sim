@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Build AirSim on Linux | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Build AirSim on Linux" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/build_linux.html" />
+<meta property="og:url" content="http://localhost:4000/docs/build_linux.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Build AirSim on Linux" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/build_linux.html","headline":"Build AirSim on Linux","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="build-airsim-on-linux">Build AirSim on Linux</h1>
+
+<p>The current recommended and tested environment is <strong>Ubuntu 18.04 LTS</strong>. Theoretically, you can build on other distros as well, but we haven’t tested it.</p>
+
+<p>We’ve two options - you can either build inside docker containers or your host machine.</p>
+
+<h2 id="docker">Docker</h2>
+
+<p>Please see instructions <a href="docker_ubuntu.md">here</a></p>
+
+<h2 id="host-machine">Host machine</h2>
+
+<h3 id="pre-build-setup">Pre-build Setup</h3>
+
+<h4 id="build-unreal-engine">Build Unreal Engine</h4>
+
+<ul>
+  <li>
+    <p>Make sure you are <a href="https://docs.unrealengine.com/en-US/SharingAndReleasing/Linux/BeginnerLinuxDeveloper/SettingUpAnUnrealWorkflow/index.html">registered with Epic Games</a>. This is required to get source code access for Unreal Engine.</p>
+  </li>
+  <li>
+    <p>Clone Unreal in your favorite folder and build it (this may take a while!). <strong>Note</strong>: We only support Unreal &gt;= 4.27 at present. We recommend using 4.27.</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># go to the folder where you clone GitHub projects</span>
+git clone <span class="nt">-b</span> 4.27 git@github.com:EpicGames/UnrealEngine.git
+<span class="nb">cd </span>UnrealEngine
+./Setup.sh
+./GenerateProjectFiles.sh
+make
+</code></pre></div></div>
+
+<h3 id="build-airsim">Build AirSim</h3>
+
+<ul>
+  <li>Clone AirSim and build it:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># go to the folder where you clone GitHub projects</span>
+git clone https://github.com/Microsoft/AirSim.git
+<span class="nb">cd </span>AirSim
+</code></pre></div></div>
+
+<p>By default AirSim uses clang 8 to build for compatibility with UE 4.27. The setup script will install the right version of cmake, llvm, and eigen.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./setup.sh
+./build.sh
+<span class="c"># use ./build.sh --debug to build in debug mode</span>
+</code></pre></div></div>
+
+<h3 id="build-unreal-environment">Build Unreal Environment</h3>
+
+<p>Finally, you will need an Unreal project that hosts the environment for your vehicles. AirSim comes with a built-in “Blocks Environment” which you can use, or you can create your own. Please see <a href="unreal_proj.md">setting up Unreal Environment</a> if you’d like to setup your own environment.</p>
+
+<h2 id="how-to-use-airsim">How to Use AirSim</h2>
+
+<p>Once AirSim is setup:</p>
+
+<ul>
+  <li>Go to <code class="language-plaintext highlighter-rouge">UnrealEngine</code> installation folder and start Unreal by running <code class="language-plaintext highlighter-rouge">./Engine/Binaries/Linux/UE4Editor</code>.</li>
+  <li>When Unreal Engine prompts for opening or creating project, select Browse and choose <code class="language-plaintext highlighter-rouge">AirSim/Unreal/Environments/Blocks</code> (or your <a href="unreal_custenv.md">custom</a> Unreal project).</li>
+  <li>Alternatively, the project file can be passed as a commandline argument. For Blocks: <code class="language-plaintext highlighter-rouge">./Engine/Binaries/Linux/UE4Editor &lt;AirSim_path&gt;/Unreal/Environments/Blocks/Blocks.uproject</code></li>
+  <li>If you get prompts to convert project, look for More Options or Convert-In-Place option. If you get prompted to build, choose Yes. If you get prompted to disable AirSim plugin, choose No.</li>
+  <li>After Unreal Editor loads, press Play button.</li>
+</ul>
+
+<p>See <a href="apis.md">Using APIs</a> and <a href="settings.md">settings.json</a> for various options available for AirSim usage.</p>
+
+<p>!!! tip
+Go to ‘Edit-&gt;Editor Preferences’, in the ‘Search’ box type ‘CPU’ and ensure that the ‘Use Less CPU when in Background’ is unchecked.</p>
+
+<h3 id="optional-setup-remote-control-multirotor-only">[Optional] Setup Remote Control (Multirotor Only)</h3>
+
+<p>A remote control is required if you want to fly manually. See the <a href="remote_control.md">remote control setup</a> for more details.</p>
+
+<p>Alternatively, you can use <a href="apis.md">APIs</a> for programmatic control or use the so-called <a href="image_apis.md">Computer Vision mode</a> to move around using the keyboard.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

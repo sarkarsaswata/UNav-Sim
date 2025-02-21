@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Adding AirSim to Custom Unity Projects | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Adding AirSim to Custom Unity Projects" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/custom_unity_environments.html" />
+<meta property="og:url" content="http://localhost:4000/docs/custom_unity_environments.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Adding AirSim to Custom Unity Projects" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/custom_unity_environments.html","headline":"Adding AirSim to Custom Unity Projects","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="adding-airsim-to-custom-unity-projects">Adding AirSim to Custom Unity Projects</h1>
+<p>Before completing these steps, make sure you have properly <a href="Unity.md">set up AirSim for Unity</a></p>
+<ol>
+  <li>Open the Containing folder of your custom unity project</li>
+  <li>Copy and paste the following items from Unity demo into the main project folder of your custom environment:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Assets
+ProjectSettings
+</code></pre></div>    </div>
+    <p><a href="https://youtu.be/5iplkEC88qw?start=5&amp;end=12"><img src="images/unity_copy_and_paste.png" alt="Copy and paste video" /></a></p>
+  </li>
+  <li>Open your custom environment in Unity</li>
+  <li>Drag your desired scene into the Scene Hierarchy panel</li>
+  <li>Drag CarDemo into the Scene Hierarchy panel</li>
+  <li>Copy the following items from CarDemo into your custom scene:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Main Camera
+Directional Light
+AirSimHUD
+AirSimGlobal
+Car
+</code></pre></div>    </div>
+  </li>
+  <li>After removing <code class="language-plaintext highlighter-rouge">CarDemo</code> from the Hierarchy panel, save your modified scene as <code class="language-plaintext highlighter-rouge">CarDemo</code>.
+<a href="https://youtu.be/5iplkEC88qw?start=45&amp;end=78"><img src="images/unity_change_scene.png" alt="change scene" /></a></li>
+  <li>Repeat Steps 5, 6 and 7 with <code class="language-plaintext highlighter-rouge">DroneDemo</code>. This time, save your custom scene as <code class="language-plaintext highlighter-rouge">DroneDemo</code>.</li>
+</ol>
+
+<p>To run your project drag <code class="language-plaintext highlighter-rouge">SimModeSelector</code> into, and remove everything else from the Scene Hierarchy panel.</p>
+
+<p>Your custom environment is now ready to interface with AirSim!</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

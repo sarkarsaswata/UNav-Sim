@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>An Orbit Trajectory | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="An Orbit Trajectory" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/orbit.html" />
+<meta property="og:url" content="http://localhost:4000/docs/orbit.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="An Orbit Trajectory" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/orbit.html","headline":"An Orbit Trajectory","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="an-orbit-trajectory">An Orbit Trajectory</h1>
+
+<p>Moved here from <a href="https://github.com/microsoft/AirSim/wiki/An-Orbit-Trajectory">https://github.com/microsoft/AirSim/wiki/An-Orbit-Trajectory</a></p>
+
+<p>Have you ever wanted to fly a nice smooth circular orbit? This can be handy for capturing 3D objects from all sides especially if you get multiple orbits at different altitudes.</p>
+
+<p>So the <code class="language-plaintext highlighter-rouge">PythonClient/multirotor</code> folder contains a script named <a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/orbit.py">Orbit</a> that will do precisely that.</p>
+
+<p>See <a href="https://youtu.be/RFG5CTQi3Us">demo video</a></p>
+
+<p>The demo video was created by running this command line:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python orbit.py <span class="nt">--radius</span> 10 <span class="nt">--altitude</span> 5 <span class="nt">--speed</span> 1 <span class="nt">--center</span> <span class="s2">"0,1"</span> <span class="nt">--iterations</span> 1
+</code></pre></div></div>
+
+<p>This flies a 10 meter radius orbit around the center location at (startpos + radius * [0,1]), in other words, the center is located <code class="language-plaintext highlighter-rouge">radius</code> meters away in the direction of the provided center vector.  It also keeps the front-facing camera on the drone always pointing at the center of the circle. If you watch the flight using LogViewer you will see a nice circular pattern get traced out on the GPS map:</p>
+
+<p><img src="images/orbit.png" alt="image" /></p>
+
+<p>The core of the algorithm is not that complicated.  At each point on the circle, we look ahead by a small delta in degrees, called the <code class="language-plaintext highlighter-rouge">lookahead_angle</code>, where that angle is computed based on our desired velocity.  We then find that lookahead point on the circle using sin/cosine and make that our “target point”. Calculating the velocity then is easy, just subtract our current position from that point and feed that into the AirSim method <code class="language-plaintext highlighter-rouge">moveByVelocityZ</code>.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Upgrading to Unreal Engine 4.27 | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Upgrading to Unreal Engine 4.27" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/unreal_upgrade.html" />
+<meta property="og:url" content="http://localhost:4000/docs/unreal_upgrade.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Upgrading to Unreal Engine 4.27" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/unreal_upgrade.html","headline":"Upgrading to Unreal Engine 4.27","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="upgrading-to-unreal-engine-427">Upgrading to Unreal Engine 4.27</h1>
+
+<p>These instructions apply if you are already using AirSim on Unreal Engine 4.25. If you have never installed AirSim, please see <a href="https://github.com/microsoft/airsim#how-to-get-it">How to get it</a>.</p>
+
+<p><strong>Caution:</strong> The below steps will delete any of your unsaved work in AirSim or Unreal folder.</p>
+
+<h2 id="do-this-first">Do this first</h2>
+
+<h3 id="for-windows-users">For Windows Users</h3>
+<ol>
+  <li>Install Visual Studio 2022 with VC++, Python and C#.</li>
+  <li>Install UE 4.27 through Epic Games Launcher.</li>
+  <li>Start <code class="language-plaintext highlighter-rouge">x64 Native Tools Command Prompt for VS 2022</code> and navigate to AirSim repo.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">clean_rebuild.bat</code> to remove all unchecked/extra stuff and rebuild everything.</li>
+  <li>See also <a href="build_windows.md">Build AirSim on Windows</a> for more information.</li>
+</ol>
+
+<h3 id="for-linux-users">For Linux Users</h3>
+<ol>
+  <li>From your AirSim repo folder, run ‘clean_rebuild.sh`.</li>
+  <li>Rename or delete your existing folder for Unreal Engine.</li>
+  <li>Follow step 1 and 2 to <a href="build_linux.md">install Unreal Engine 4.27</a>.</li>
+  <li>See also <a href="build_linux.md">Build AirSim on Linux</a> for more information.</li>
+</ol>
+
+<h2 id="upgrading-your-custom-unreal-project">Upgrading Your Custom Unreal Project</h2>
+<p>If you have your own Unreal project created in an older version of Unreal Engine then you need to upgrade your project to Unreal 4.27. To do this,</p>
+
+<ol>
+  <li>Open .uproject file and look for the line <code class="language-plaintext highlighter-rouge">"EngineAssociation"</code> and make sure it reads like <code class="language-plaintext highlighter-rouge">"EngineAssociation": "4.27"</code>.</li>
+  <li>Delete <code class="language-plaintext highlighter-rouge">Plugins/AirSim</code> folder in your Unreal project’s folder.</li>
+  <li>Go to your AirSim repo folder and copy <code class="language-plaintext highlighter-rouge">Unreal\Plugins</code> folder to your Unreal project’s folder.</li>
+  <li>Copy *.bat (or *.sh for Linux) from <code class="language-plaintext highlighter-rouge">Unreal\Environments\Blocks</code> to your project’s folder.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">clean.bat</code> (or <code class="language-plaintext highlighter-rouge">clean.sh</code> for Linux) followed by <code class="language-plaintext highlighter-rouge">GenerateProjectFiles.bat</code> (only for Windows).</li>
+</ol>
+
+<h2 id="faq">FAQ</h2>
+
+<h3 id="i-have-an-unreal-project-that-is-older-than-416-how-do-i-upgrade-it">I have an Unreal project that is older than 4.16. How do I upgrade it?</h3>
+
+<h4 id="option-1-just-recreate-project">Option 1: Just Recreate Project</h4>
+<p>If your project doesn’t have any code or assets other than environment you downloaded then you can also simply <a href="unreal_custenv.md">recreate the project in Unreal 4.27 Editor</a> and then copy Plugins folder from <code class="language-plaintext highlighter-rouge">AirSim/Unreal/Plugins</code>.</p>
+
+<h4 id="option-2-modify-few-files">Option 2: Modify Few Files</h4>
+<p>Unreal versions newer than Unreal 4.15 has breaking changes. So you need to modify your *.Build.cs and *.Target.cs which you can find in the <code class="language-plaintext highlighter-rouge">Source</code> folder of your Unreal project. So what are those changes? Below is the gist of it but you should really refer to <a href="https://forums.unrealengine.com/showthread.php?145757-C-4-16-Transition-Guide">Unreal’s official 4.16 transition post</a>.</p>
+
+<h5 id="in-your-projects-targetcs">In your project’s *.Target.cs</h5>
+<ol>
+  <li>
+    <p>Change the contructor from, <code class="language-plaintext highlighter-rouge">public MyProjectTarget(TargetInfo Target)</code> to <code class="language-plaintext highlighter-rouge">public MyProjectTarget(TargetInfo Target) : base(Target)</code></p>
+  </li>
+  <li>
+    <p>Remove <code class="language-plaintext highlighter-rouge">SetupBinaries</code> method if you have one and instead add following line in contructor above: <code class="language-plaintext highlighter-rouge">ExtraModuleNames.AddRange(new string[] { "MyProject" });</code></p>
+  </li>
+</ol>
+
+<h5 id="in-your-projects-buildcs">In your project’s *.Build.cs</h5>
+<p>Change the constructor from <code class="language-plaintext highlighter-rouge">public MyProject(TargetInfo Target)</code> to <code class="language-plaintext highlighter-rouge">public MyProject(ReadOnlyTargetRules Target) : base(Target)</code>.</p>
+
+<h5 id="and-finally">And finally…</h5>
+<p>Follow above steps to continue the upgrade. The warning box might show only “Open Copy” button. Don’t click that. Instead, click on More Options which will reveal more buttons. Choose <code class="language-plaintext highlighter-rouge">Convert-In-Place option</code>. <em>Caution:</em> Always keep backup of your project first! If you don’t have anything nasty, in place conversion should go through and you are now on the new version of Unreal.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

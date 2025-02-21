@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Setup Blocks Environment for AirSim | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Setup Blocks Environment for AirSim" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/unreal_blocks.html" />
+<meta property="og:url" content="http://localhost:4000/docs/unreal_blocks.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Setup Blocks Environment for AirSim" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/unreal_blocks.html","headline":"Setup Blocks Environment for AirSim","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      
+<h1 id="setup-blocks-environment-for-airsim">Setup Blocks Environment for AirSim</h1>
+
+<p>Blocks environment is available in repo in folder <code class="language-plaintext highlighter-rouge">Unreal/Environments/Blocks</code> and is designed to be lightweight in size. That means its very basic but fast.</p>
+
+<p>Here are quick steps to get Blocks environment up and running:</p>
+
+<h2 id="windows">Windows</h2>
+
+<ol>
+  <li>Make sure you have <a href="build_windows.md">installed Unreal and built AirSim</a>.</li>
+  <li>Navigate to folder <code class="language-plaintext highlighter-rouge">AirSim\Unreal\Environments\Blocks</code>, double click on Blocks.sln file to open in Visual Studio. By default, this project is configured for Visual Studio 2019. However, if you want to generate this project for Visual Studio 2022, go to ‘Edit-&gt;Editor Preferences-&gt;Source Code’ inside the Unreal Editor and select ‘Visual Studio 2022’ for the ‘Source Code Editor’ setting.</li>
+  <li>Make sure <code class="language-plaintext highlighter-rouge">Blocks</code> project is the startup project, build configuration is set to <code class="language-plaintext highlighter-rouge">DebugGame_Editor</code> and <code class="language-plaintext highlighter-rouge">Win64</code>. Hit F5 to run.</li>
+  <li>Press the Play button in Unreal Editor and you will see something like in below video. Also see <a href="https://github.com/Microsoft/AirSim/#how-to-use-it">how to use AirSim</a>.</li>
+</ol>
+
+<h3 id="changing-code-and-rebuilding">Changing Code and Rebuilding</h3>
+<p>For Windows, you can just change the code in Visual Studio, press F5 and re-run. There are few batch files available in folder <code class="language-plaintext highlighter-rouge">AirSim\Unreal\Environments\Blocks</code> that lets you sync code, clean etc.</p>
+
+<h2 id="linux">Linux</h2>
+<ol>
+  <li>Make sure you have <a href="build_linux.md">built the Unreal Engine and AirSim</a>.</li>
+  <li>Navigate to your UnrealEngine repo folder and run <code class="language-plaintext highlighter-rouge">Engine/Binaries/Linux/UE4Editor</code> which will start Unreal Editor.</li>
+  <li>On first start you might not see any projects in UE4 editor. Click on Projects tab, Browse button and then navigate to <code class="language-plaintext highlighter-rouge">AirSim/Unreal/Environments/Blocks/Blocks.uproject</code>.</li>
+  <li>If you get prompted for incompatible version and conversion, select In-place conversion which is usually under “More” options. If you get prompted for missing modules, make sure to select No so you don’t exit.</li>
+  <li>Finally, when prompted with building AirSim, select Yes. Now it might take a while so go get some coffee :).</li>
+  <li>Press the Play button in Unreal Editor and you will see something like in below video. Also see <a href="https://github.com/microsoft/AirSim/#how-to-use-it">how to use AirSim</a>.</li>
+</ol>
+
+<p><a href="https://www.youtube.com/watch?v=-r_QGaxMT4A"><img src="images/blocks_video.png" alt="Blocks Demo Video" /></a></p>
+
+<h3 id="changing-code-and-rebuilding-1">Changing Code and Rebuilding</h3>
+<p>For Linux, make code changes in AirLib or Unreal/Plugins folder and then run <code class="language-plaintext highlighter-rouge">./build.sh</code> to rebuild. This step also copies the build output to Blocks sample project. You can then follow above steps again to re-run.</p>
+
+<h2 id="chosing-your-vehicle-car-or-multirotor">Chosing Your Vehicle: Car or Multirotor</h2>
+<p>By default AirSim spawns multirotor. You can easily change this to car and use all of AirSim goodies. Please see <a href="using_car.md">using car</a> guide.</p>
+
+<h2 id="faq">FAQ</h2>
+<h4 id="i-see-warnings-about-like-_buitdata-file-is-missing">I see warnings about like “_BuitData” file is missing.</h4>
+<p>These are intermediate files and you can safely ignore it.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Adding New APIs to AirSim | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Adding New APIs to AirSim" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/adding_new_apis.html" />
+<meta property="og:url" content="http://localhost:4000/docs/adding_new_apis.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Adding New APIs to AirSim" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/adding_new_apis.html","headline":"Adding New APIs to AirSim","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="adding-new-apis-to-airsim">Adding New APIs to AirSim</h1>
+
+<p>Adding new APIs requires modifying the source code. Much of the changes are mechanical and required for various levels of abstractions that AirSim supports. The main files required to be modified are described below along with some commits and PRs for demonstration. Specific sections of the PRs or commits might be linked in some places, but it’ll be helpful to have a look at the entire diff to get a better sense of the workflow. Also, don’t hesitate in opening an issue or a draft PR also if unsure about how to go about making changes or to get feedback.</p>
+
+<h2 id="implementing-the-api">Implementing the API</h2>
+
+<p>Before adding the wrapper code to call and handle the API, it needs to be implemented first. The exact files where this will occur varies depending on what it does. Few examples are given below which might help you in getting started.</p>
+
+<h3 id="vehicle-based-apis">Vehicle-based APIs</h3>
+
+<p><code class="language-plaintext highlighter-rouge">moveByVelocityBodyFrameAsync</code> API for velocity-based movement in the multirotor’s X-Y frame.</p>
+
+<p>The main implementation is done in <a href="https://github.com/microsoft/AirSim/pull/3169/files#diff-29ac01a05077b6e8e1f09221a113f779c952a80dc8823725eb451a9fc5d7de5f">MultirotorBaseApi.cpp</a>, where most of the multirotor APIs are implemented.</p>
+
+<p>In some cases, additional structures might be needed for storing data, <a href="https://github.com/microsoft/AirSim/pull/3242"><code class="language-plaintext highlighter-rouge">getRotorStates</code> API</a> is a good example for this, here the <code class="language-plaintext highlighter-rouge">RotorStates</code> struct is defined in 2 places for conversion from RPC to internal code. It also requires modifications in AirLib as well as Unreal/Plugins for the implementation.</p>
+
+<h3 id="environment-related-apis">Environment-related APIs</h3>
+
+<p>These APIs need to interact with the simulation environment itself, hence it’s likely that it’ll be implemented inside the <code class="language-plaintext highlighter-rouge">Unreal/Plugins</code> folder.</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">simCreateVoxelGrid</code> API to generate and save a binvox-formatted grid of the environment - <a href="https://github.com/microsoft/AirSim/pull/3209/files#diff-89d4ec9b62486b1322e5ba2dd9936b13962f9ed113ec5e35a0678846889c7e2d">WorldSimApi.cpp</a></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">simAddVehicle</code> API to create vehicles at runtime - <a href="https://github.com/microsoft/AirSim/pull/2390/files#diff-fcc0aa1fbc74a924fccd12589295aceeea59074c94256eccba7df3ce85d3a26c">SimMode*, WorldSimApi files</a></p>
+  </li>
+</ul>
+
+<h3 id="physics-related-apis">Physics-related APIs</h3>
+
+<p><code class="language-plaintext highlighter-rouge">simSetWind</code> API shows an example of modifying the physics behaviour and adding an API + settings field for the same. See <a href="https://github.com/microsoft/AirSim/pull/2867">the PR</a> for details about the code.</p>
+
+<h2 id="rpc-wrappers">RPC Wrappers</h2>
+
+<p>The APIs use <a href="https://github.com/msgpack-rpc/msgpack-rpc">msgpack-rpc protocol</a> over TCP/IP through <a href="http://rpclib.net/">rpclib</a> developed by <a href="https://github.com/sztomi">TamÃ¡s Szelei</a> which allows you to use variety of programming languages including C++, C#, Python, Java etc. When AirSim starts, it opens port 41451 (this can be changed via <a href="settings.md">settings</a>) and listens for incoming request. The Python or C++ client code connects to this port and sends RPC calls using <a href="https://msgpack.org">msgpack serialization format</a>.</p>
+
+<p>To add the RPC code to call the new API, follow the steps below. Follow the implementation of other APIs defined in the files.</p>
+
+<ol>
+  <li>
+    <p>Add an RPC handler in the server which calls your implemented method in <a href="https://github.com/microsoft/AirSim/blob/main/AirLib/src/api/RpcLibServerBase.cpp">RpcLibServerBase.cpp</a>. Vehicle-specific APIs are in their respective vehicle subfolder.</p>
+  </li>
+  <li>
+    <p>Add the C++ client API method in <a href="https://github.com/microsoft/AirSim/blob/main/AirLib/src/api/RpcLibClientBase.cpp">RpcClientBase.cpp</a></p>
+  </li>
+  <li>
+    <p>Add the Python client API method in <a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/airsim/client.py">client.py</a>. If needed, add or modify a structure definition in <a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/airsim/types.py">types.py</a></p>
+  </li>
+</ol>
+
+<h2 id="testing">Testing</h2>
+
+<p>Testing is required to ensure that the API is working as expected. For this, as expected, you’ll have to use the source-built AirSim and Blocks environment. Apart from this, if using the Python APIs, you’ll have to use the <code class="language-plaintext highlighter-rouge">airsim</code> package from source rather than the PyPI package. Below are 2 ways described to go about using the package from source -</p>
+
+<ol>
+  <li>
+    <p>Use <a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/setup_path.py">setup_path.py</a>. It will setup the path such that the local airsim module is used instead of the pip installed package. This is the method used in many of the scripts since the user doesn’t need to do anything other than run the script.
+ Place your example script in one of the folders inside <code class="language-plaintext highlighter-rouge">PythonClient</code> like <code class="language-plaintext highlighter-rouge">multirotor</code>, <code class="language-plaintext highlighter-rouge">car</code>, etc. You can also create one to keep things separate, and copy the <code class="language-plaintext highlighter-rouge">setup_path.py</code> file from another folder.
+ Add <code class="language-plaintext highlighter-rouge">import setup_path</code> before <code class="language-plaintext highlighter-rouge">import airsim</code> in your files. Now the latest main API (or any branch currently checked out) will be used.</p>
+  </li>
+  <li>
+    <p>Use a <a href="https://pip.pypa.io/en/stable/cli/pip_install/#local-project-installs">local project pip install</a>. Regular install would create a copy of the current source and use it, whereas Editable install (<code class="language-plaintext highlighter-rouge">pip install -e .</code> from inside the <code class="language-plaintext highlighter-rouge">PythonClient</code> folder) would change the package whenever the Python API files are changed. Editable install has the benefit when working on several branches or API is not finalized.</p>
+  </li>
+</ol>
+
+<p>It is recommended to use a virtual environment for dealing with Python packaging so as to not break any existing setup.</p>
+
+<p>When opening a PR, make sure to follow the <a href="coding_guidelines.md">coding guidelines</a>. Also add a docstring for the API in the Python files, and please include any example scripts and settings required in the script as well.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

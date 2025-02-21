@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>XBox Controller | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="XBox Controller" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/xbox_controller.html" />
+<meta property="og:url" content="http://localhost:4000/docs/xbox_controller.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="XBox Controller" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/xbox_controller.html","headline":"XBox Controller","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="xbox-controller">XBox Controller</h1>
+
+<p>To use an XBox controller with AirSim follow these steps:</p>
+
+<ol>
+  <li>Connect XBox controller so it shows up in your PC Game Controllers:</li>
+</ol>
+
+<p><img src="images/game_controllers.png" alt="Gamecontrollers" /></p>
+
+<ol>
+  <li>Launch QGroundControl and you should see a new Joystick tab under settings:</li>
+</ol>
+
+<p><img src="images/qgc_joystick.png" alt="Gamecontrollers" /></p>
+
+<p>Now calibrate the radio, and setup some handy button actions.  For example, I set mine so that 
+the ‘A’ button arms the drone, ‘B’ put it in manual flight mode, ‘X’ puts it in altitude hold mode
+and ‘Y’ puts it in position hold mode.  I also prefer the feel of the controller when I check the
+box labelled “Use exponential curve on roll,pitch, yaw” because this gives me more sensitivity for
+small movements.</p>
+
+<p>QGroundControl will find your Pixhawk via the UDP proxy port 14550 setup by MavLinkTest above.
+AirSim will find your Pixhawk via the other UDP server port 14570 also setup by MavLinkTest above.
+You can also use all the QGroundControl controls for autonomous flying at this point too.</p>
+
+<ol>
+  <li>Connect to Pixhawk serial port using MavLinkTest.exe like this:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MavLinkTest.exe -serial:*,115200 -proxy:127.0.0.1:14550 -server:127.0.0.1:14570
+</code></pre></div>    </div>
+  </li>
+  <li>Run AirSim Unreal simulator with these <code class="language-plaintext highlighter-rouge">~/Documents/AirSim/settings.json</code> settings:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Vehicles": {
+ "PX4": {
+     "VehicleType": "PX4Multirotor",
+
+     "SitlIp": "",
+     "SitlPort": 14560,
+     "UdpIp": "127.0.0.1",
+     "UdpPort": 14570,
+     "UseSerial": false
+ }
+}
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="advanced">Advanced</h2>
+
+<p>If the Joystick tab doesn’t show up in QGroundControl then Click on the purple “Q” icon on left in tool bar to reveal the Preferences panel.
+Go to General tab and check the Virtual Joystick checkbox.  Go back to settings screen (gears icon), click on Parameters tab,
+type <code class="language-plaintext highlighter-rouge">COM_RC_IN_MODE</code> in search box and change its value to either <code class="language-plaintext highlighter-rouge">Joystick/No RC Checks</code> or <code class="language-plaintext highlighter-rouge">Virtual RC by Joystick</code>.</p>
+
+<h3 id="other-options">Other Options</h3>
+
+<p>See <a href="remote_control.md">remote controller options</a></p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

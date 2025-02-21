@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Point Clouds | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Point Clouds" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/point_clouds.html" />
+<meta property="og:url" content="http://localhost:4000/docs/point_clouds.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Point Clouds" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/point_clouds.html","headline":"Point Clouds","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="point-clouds">Point Clouds</h1>
+
+<p>Moved here from <a href="https://github.com/microsoft/AirSim/wiki/Point-Clouds">https://github.com/microsoft/AirSim/wiki/Point-Clouds</a></p>
+
+<p>A Python script <a href="https://github.com/Microsoft/AirSim/blob/main/PythonClient/multirotor/point_cloud.py">point_cloud.py</a> shows how to convert the depth image returned from AirSim into a point cloud.</p>
+
+<p>The following depth image was captured using the Modular Neighborhood environment:</p>
+
+<p><img src="images/depth.png" alt="depth" /></p>
+
+<p>And with the appropriate projection matrix, the OpenCV <code class="language-plaintext highlighter-rouge">reprojectImageTo3D</code> function can turn this into a point cloud.  The following is the result, which is also available here: <a href="https://skfb.ly/68r7y">https://skfb.ly/68r7y</a>.</p>
+
+<p><img src="images/point_cloud.png" alt="depth" /></p>
+
+<p><a href="https://sketchfab.com">SketchFab</a> can upload the resulting file <code class="language-plaintext highlighter-rouge">cloud.asc</code> and render it for you.</p>
+
+<p>PS: you may notice the scene is reflected on the Y axis, so I may have a sign wrong in the projection matrix.  An exercise for the reader :-)</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

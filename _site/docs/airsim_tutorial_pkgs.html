@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>AirSim ROS Tutorials | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="AirSim ROS Tutorials" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/airsim_tutorial_pkgs.html" />
+<meta property="og:url" content="http://localhost:4000/docs/airsim_tutorial_pkgs.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="AirSim ROS Tutorials" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/airsim_tutorial_pkgs.html","headline":"AirSim ROS Tutorials","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="airsim-ros-tutorials">AirSim ROS Tutorials</h1>
+
+<p>This is a set of sample AirSim <code class="language-plaintext highlighter-rouge">settings.json</code>s, roslaunch and rviz files to give a starting point for using AirSim with ROS.   <br />
+See <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/README.md">airsim_ros_pkgs</a> for the ROS API.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>Make sure that the <a href="airsim_ros_pkgs.md">airsim_ros_pkgs Setup</a> has been completed and the prerequisites installed.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd </span>PATH_TO/AirSim/ros
+<span class="nv">$ </span>catkin build airsim_tutorial_pkgs
+</code></pre></div></div>
+
+<p>If your default GCC isn’t 8 or greater (check using <code class="language-plaintext highlighter-rouge">gcc --version</code>), then compilation will fail. In that case, use <code class="language-plaintext highlighter-rouge">gcc-8</code> explicitly as follows-</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>catkin build airsim_tutorial_pkgs <span class="nt">-DCMAKE_C_COMPILER</span><span class="o">=</span>gcc-8 <span class="nt">-DCMAKE_CXX_COMPILER</span><span class="o">=</span>g++-8
+</code></pre></div></div>
+
+<p>!!! note</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>For running examples, and also whenever a new terminal is opened, sourcing the `setup.bash` file is necessary. If you're using the ROS wrapper frequently, it might be helpful to add the `source PATH_TO/AirSim/ros/devel/setup.bash` to your `~/.profile` or `~/.bashrc` to avoid the need to run the command every time a new terminal is opened
+</code></pre></div></div>
+
+<h2 id="examples">Examples</h2>
+
+<h3 id="single-drone-with-monocular-and-depth-cameras-and-lidar">Single drone with monocular and depth cameras, and lidar</h3>
+<ul>
+  <li>Settings.json - <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_tutorial_pkgs/settings/front_stereo_and_center_mono.json">front_stereo_and_center_mono.json</a>
+ ```shell
+ $ source PATH_TO/AirSim/ros/devel/setup.bash
+ $ roscd airsim_tutorial_pkgs
+ $ cp settings/front_stereo_and_center_mono.json ~/Documents/AirSim/settings.json</li>
+</ul>
+
+<p>## Start your unreal package or binary here</p>
+
+<p>$ roslaunch airsim_ros_pkgs airsim_node.launch;</p>
+
+<p># in a new pane / terminal
+ $ source PATH_TO/AirSim/ros/devel/setup.bash
+ $ roslaunch airsim_tutorial_pkgs front_stereo_and_center_mono.launch</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> The above would start rviz with tf's, registered RGBD cloud using [depth_image_proc](https://wiki.ros.org/depth_image_proc) using the [`depth_to_pointcloud` launch file](https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_tutorial_pkgs/launch/front_stereo_and_center_mono/depth_to_pointcloud.launch), and the lidar point cloud. 
+
+
+### Two drones, with cameras, lidar, IMU each
+- Settings.json - [two_drones_camera_lidar_imu.json](https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_tutorial_pkgs/settings/two_drones_camera_lidar_imu.json) 
+
+ ```shell
+ $ source PATH_TO/AirSim/ros/devel/setup.bash
+ $ roscd airsim_tutorial_pkgs
+ $ cp settings/two_drones_camera_lidar_imu.json ~/Documents/AirSim/settings.json
+
+ ## Start your unreal package or binary here
+
+ $ roslaunch airsim_ros_pkgs airsim_node.launch;
+ $ roslaunch airsim_ros_pkgs rviz.launch
+</code></pre></div></div>
+<p>You can view the tfs in rviz. And do a <code class="language-plaintext highlighter-rouge">rostopic list</code> and <code class="language-plaintext highlighter-rouge">rosservice list</code> to inspect the services avaiable.</p>
+
+<h3 id="twenty-five-drones-in-a-square-pattern">Twenty-five drones in a square pattern</h3>
+<ul>
+  <li>Settings.json - <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_tutorial_pkgs/settings/twenty_five_drones.json">twenty_five_drones.json</a></li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span><span class="nb">source </span>PATH_TO/AirSim/ros/devel/setup.bash
+ <span class="nv">$ </span>roscd airsim_tutorial_pkgs
+ <span class="nv">$ </span><span class="nb">cp </span>settings/twenty_five_drones.json ~/Documents/AirSim/settings.json
+
+ <span class="c">## Start your unreal package or binary here</span>
+
+ <span class="nv">$ </span>roslaunch airsim_ros_pkgs airsim_node.launch<span class="p">;</span>
+ <span class="nv">$ </span>roslaunch airsim_ros_pkgs rviz.launch
+</code></pre></div></div>
+<p>You can view the tfs in rviz. And do a <code class="language-plaintext highlighter-rouge">rostopic list</code> and <code class="language-plaintext highlighter-rouge">rosservice list</code> to inspect the services avaiable.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

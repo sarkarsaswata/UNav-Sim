@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Welcome to GazeboDrone | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Welcome to GazeboDrone" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/gazebo_drone.html" />
+<meta property="og:url" content="http://localhost:4000/docs/gazebo_drone.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Welcome to GazeboDrone" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/gazebo_drone.html","headline":"Welcome to GazeboDrone","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="welcome-to-gazebodrone">Welcome to GazeboDrone</h1>
+
+<p>GazeboDrone allows connecting a gazebo drone to the AirSim drone, using the gazebo drone as a flight dynamic model (FDM) and AirSim to generate environmental sensor data. It can be used for <strong>Multicopters</strong>, <strong>Fixed-wings</strong> or any other vehicle.</p>
+
+<h2 id="dependencies">Dependencies</h2>
+
+<h3 id="gazebo">Gazebo</h3>
+
+<p>Make sure you have installed gazebo dependencies:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install libgazebo9-dev
+</code></pre></div></div>
+
+<h3 id="airlib">AirLib</h3>
+
+<p>This project is built with GCC 8, so AirLib needs to be built with GCC 8 too. 
+Run from your AirSim root folder:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./clean.sh
+./setup.sh
+./build.sh --gcc
+</code></pre></div></div>
+
+<h2 id="airsim-simulator">AirSim simulator</h2>
+
+<p>The AirSim UE plugin needs to be built with clang, so you can’t use the one compiled in the previous step. You can use <a href="https://github.com/microsoft/AirSim/releases">our binaries</a> or you can clone AirSim again in another folder and buid it without the above option, then you can <a href="build_linux.md#how-to-use-airsim">run Blocks</a> or your own environment.</p>
+
+<h3 id="airsim-settings">AirSim settings</h3>
+
+<p>Inside your <code class="language-plaintext highlighter-rouge">settings.json</code> file you need to add this line:<br />
+<code class="language-plaintext highlighter-rouge">"PhysicsEngineName":"ExternalPhysicsEngine"</code>.<br />
+You may want to change the visual model of the AirSim drone, for that you can follow <a href="https://youtu.be/Bp86WiLUC80">this tutorial.</a></p>
+
+<h2 id="build">Build</h2>
+
+<p>Execute this from your AirSim root folder:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd GazeboDrone
+mkdir build &amp;&amp; cd build
+cmake -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8 ..
+make
+</code></pre></div></div>
+
+<h2 id="run">Run</h2>
+
+<p>First run the AirSim simulator and your Gazebo model and then execute this from your AirSim root folder:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd GazeboDrone/build
+./GazeboDrone
+</code></pre></div></div>
+
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>PX4/MavLink Logging | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="PX4/MavLink Logging" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/px4_logging.html" />
+<meta property="og:url" content="http://localhost:4000/docs/px4_logging.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="PX4/MavLink Logging" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/px4_logging.html","headline":"PX4/MavLink Logging","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="px4mavlink-logging">PX4/MavLink Logging</h1>
+
+<p>Thanks to <a href="https://github.com/clovett">Chris Lovett</a> for developing various tools for PX4/MavLink logging mentioned on this page!</p>
+
+<h2 id="logging-mavlink-messages">Logging MavLink Messages</h2>
+
+<p>AirSim can capture mavlink log files if you add the following to the PX4 section of your <code class="language-plaintext highlighter-rouge">settings.json</code> file:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"SettingsVersion"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"SimMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Multirotor"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"PX4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="err">...</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Logs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c:/temp/mavlink"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>AirSim will create a timestamped log file in this folder for each “armed/disarmed” flight session.</p>
+
+<p>You will then see log files organized by date in d:\temp\logs, specifically *input.mavlink and *output.mavlink files.</p>
+
+<h2 id="mavlink-logviewer">MavLink LogViewer</h2>
+<p>For MavLink enabled drones, you can also use our <a href="log_viewer.md">Log Viewer</a> to visualize the streams of data.
+If you enable this form of realtime logging you should not use the “Logs” setting above, these two forms of logging
+are mutually exclusive.</p>
+
+<h2 id="px4-log-in-sitl-mode">PX4 Log in SITL Mode</h2>
+
+<p>In SITL mode, please a log file is produced when drone is armed. The SITL terminal will contain the path to the log file, it should look something like this</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INFO  [logger] Opened log file: rootfs/fs/microsd/log/2017-03-27/20_02_49.ulg
+</code></pre></div></div>
+
+<h2 id="px4-log-in-hitl-mode">PX4 Log in HITL Mode</h2>
+
+<p>If you are using Pixhawk hardware in HIL mode, then set parameter <code class="language-plaintext highlighter-rouge">SYS_LOGGER=1</code>
+using QGroundControl. PX4 will write log file on device which you can download at later date using QGroundControl.</p>
+
+<h2 id="debugging-a-bad-flight">Debugging a bad flight</h2>
+
+<p>You can use these *.mavlink log files to debug a bad flight using the <a href="log_viewer.md">LogViewer</a>.
+For example, AirSim/PX4 flight may misbehave if you run it on an under powered computer.
+The following shows what might happen in that situation.</p>
+
+<p><img src="images/px4_debugging.png" alt="screenshot" /></p>
+
+<p>In this flight we ran a simple <code class="language-plaintext highlighter-rouge">commander takeoff</code> test as performed
+by <code class="language-plaintext highlighter-rouge">PythonClient/multirotor/stability_test.py</code> and the flight started off fine, but then went crazy at the end and the drone crashed.  So why is that?  What can the log file show?</p>
+
+<p>Here we’ve plotted the following 5 metrics:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">hil_gps.alt</code> - the simulated altitude sent from AirSim to PX4</li>
+  <li><code class="language-plaintext highlighter-rouge">telemetry.update_rate</code> - the rate AirSim is performing the critical drone update loop in updates per second.</li>
+  <li><code class="language-plaintext highlighter-rouge">telemetry.update_time</code> - the average time taken inside AirSim performing the critical drone update loop.</li>
+  <li><code class="language-plaintext highlighter-rouge">telemetry.actuation_delay</code> - this is a very interesting metric measuring how long it takes PX4 to send back updated actuator controls message (motor power)</li>
+  <li><code class="language-plaintext highlighter-rouge">actuator_controls.0</code> - the actuator controls signal from PX4 for the first rotor.</li>
+</ul>
+
+<p>What we see then with these metrics is that things started off nicely, with nice flat altitude, high update rate in the 275 to 300 fps range, and a nice low update time inside AirSim around 113 microseconds, and a nice low actuation delay in the round trip from PX4.  The actuator controls also stabilize quickly to a nice flat line.</p>
+
+<p>But then the update_time starts to climb, at the same time the actuation_delay climbs and we see a little tip in actuator_controls.
+This dip should not happen, the PX4 is panicking over loss of update rate but it recovers.</p>
+
+<p>But then we see actuator controls go crazy, a huge spike in actuation delay, and around this time we see a message from AirSim saying <code class="language-plaintext highlighter-rouge">lockstep disabled</code>.  A delay over 100 millisecond triggers AirSim into jumping out of lockstep mode and the PX4 goes nuts and the drone crashes.</p>
+
+<p>The button line is that if a simple <code class="language-plaintext highlighter-rouge">takeoff</code> cannot maintain steady smooth flight and you see these kinds of spikes and uneven update rates
+then it means you are running AirSim on a computer that does not have enough horsepower.</p>
+
+<p>This is what a simple takeoff and hover and land should look like:</p>
+
+<p><img src="images/px4_nice.png" alt="nice" /></p>
+
+<p>Here you see the <code class="language-plaintext highlighter-rouge">update_rate</code> sticking the target of 333 updates per second.
+You also see the <code class="language-plaintext highlighter-rouge">update_time</code> a nice flat 39 microseconds and the <code class="language-plaintext highlighter-rouge">actuator_delay</code>
+somewhere between 1.1 and 1.7 milliseconds, and the resulting <code class="language-plaintext highlighter-rouge">actuator_controls</code>
+a lovely flat line.</p>
+
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

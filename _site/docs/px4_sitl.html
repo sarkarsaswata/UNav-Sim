@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Setting up PX4 Software-in-Loop | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Setting up PX4 Software-in-Loop" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/px4_sitl.html" />
+<meta property="og:url" content="http://localhost:4000/docs/px4_sitl.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Setting up PX4 Software-in-Loop" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/px4_sitl.html","headline":"Setting up PX4 Software-in-Loop","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="setting-up-px4-software-in-loop">Setting up PX4 Software-in-Loop</h1>
+
+<p>The <a href="http://dev.px4.io">PX4</a> software provides a “software-in-loop” simulation (SITL) version of
+their stack that runs in Linux. If you are on Windows then you can use the <a href="https://dev.px4.io/master/en/setup/dev_env_windows_cygwin.html">Cygwin
+Toolchain</a> or you can use the
+<a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows subsystem for Linux</a> and follow
+the PX4 Linux toolchain setup.</p>
+
+<p>If you are using WSL2 please read these <a href="px4_sitl_wsl2.md">additional
+instructions</a>.</p>
+
+<p><strong>Note</strong> that every time you stop the unreal app you have to restart the <code class="language-plaintext highlighter-rouge">px4</code> app.</p>
+
+<ol>
+  <li>
+    <p>From your bash terminal follow <a href="https://docs.px4.io/master/en/dev_setup/dev_env_linux.html">these steps for
+Linux</a> and follow <strong>all</strong> the
+instructions under <code class="language-plaintext highlighter-rouge">NuttX based hardware</code> to install prerequisites. We’ve also included our own
+copy of the <a href="px4_build.md">PX4 build instructions</a> which is a bit more concise about what we need
+exactly.</p>
+  </li>
+  <li>Get the PX4 source code and build the posix SITL version of PX4:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> mkdir -p PX4
+ cd PX4
+ git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+ bash ./PX4-Autopilot/Tools/setup/ubuntu.sh --no-nuttx --no-sim-tools
+ cd PX4-Autopilot
+</code></pre></div>    </div>
+    <p>And find the latest stable release from <a href="https://github.com/PX4/PX4-Autopilot/releases">https://github.com/PX4/PX4-Autopilot/releases</a>
+ and checkout the source code matching that release, for example:</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git checkout v1.11.3
+</code></pre></div>    </div>
+  </li>
+  <li>Use following command to build and start PX4 firmware in SITL mode:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> make px4_sitl_default none_iris
+</code></pre></div>    </div>
+    <p>If you are using older version v1.8.* use this command instead: <code class="language-plaintext highlighter-rouge">make posix_sitl_ekf2 none_iris</code>.</p>
+  </li>
+  <li>You should see a message saying the SITL PX4 app is waiting for the simulator (AirSim) to connect.
+You will also see information about which ports are configured for mavlink connection to the PX4 app.
+The default ports have changed recently, so check them closely to make sure AirSim settings are correct.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> INFO  [simulator] Waiting for simulator to connect on TCP port 4560
+ INFO  [init] Mixer: etc/mixers/quad_w.main.mix on /dev/pwm_output0
+ INFO  [mavlink] mode: Normal, data rate: 4000000 B/s on udp port 14570 remote port 14550
+ INFO  [mavlink] mode: Onboard, data rate: 4000000 B/s on udp port 14580 remote port 14540
+</code></pre></div>    </div>
+
+    <p>Note: this is also an interactive PX4 console, type <code class="language-plaintext highlighter-rouge">help</code> to see the
+ list of commands you can enter here.  They are mostly low level PX4
+ commands, but some of them can be useful for debugging.</p>
+  </li>
+  <li>Now edit <a href="settings.md">AirSim settings</a> file to make sure you have matching UDP and TCP port settings:
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"SettingsVersion"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"SimMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Multirotor"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"ClockType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SteppableClock"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="nl">"PX4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+             </span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PX4Multirotor"</span><span class="p">,</span><span class="w">
+             </span><span class="nl">"UseSerial"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+             </span><span class="nl">"LockStep"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+             </span><span class="nl">"UseTcp"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+             </span><span class="nl">"TcpPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">4560</span><span class="p">,</span><span class="w">
+             </span><span class="nl">"ControlPortLocal"</span><span class="p">:</span><span class="w"> </span><span class="mi">14540</span><span class="p">,</span><span class="w">
+             </span><span class="nl">"ControlPortRemote"</span><span class="p">:</span><span class="w"> </span><span class="mi">14580</span><span class="p">,</span><span class="w">
+             </span><span class="nl">"Sensors"</span><span class="p">:{</span><span class="w">
+                 </span><span class="nl">"Barometer"</span><span class="p">:{</span><span class="w">
+                     </span><span class="nl">"SensorType"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                     </span><span class="nl">"Enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                     </span><span class="nl">"PressureFactorSigma"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0001825</span><span class="w">
+                 </span><span class="p">}</span><span class="w">
+             </span><span class="p">},</span><span class="w">
+             </span><span class="nl">"Parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                 </span><span class="nl">"NAV_RCL_ACT"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+                 </span><span class="nl">"NAV_DLL_ACT"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+                 </span><span class="nl">"COM_OBL_ACT"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                 </span><span class="nl">"LPE_LAT"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.641468</span><span class="p">,</span><span class="w">
+                 </span><span class="nl">"LPE_LON"</span><span class="p">:</span><span class="w"> </span><span class="mf">-122.140165</span><span class="w">
+             </span><span class="p">}</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+    <p>Notice the PX4 <code class="language-plaintext highlighter-rouge">[simulator]</code> is using TCP, which is why we need to add: <code class="language-plaintext highlighter-rouge">"UseTcp": true,</code>.
+ Notice we are also enabling <code class="language-plaintext highlighter-rouge">LockStep</code>, see <a href="px4_lockstep.md">PX4 LockStep</a> for more
+ information. The <code class="language-plaintext highlighter-rouge">Barometer</code> setting keeps PX4 happy because the default AirSim barometer has a
+ bit too much noise generation.  This setting clamps that down a bit which allows PX4 to achieve
+ GPS lock more quickly.</p>
+  </li>
+  <li>
+    <p>Open incoming TCP port 4560 and incoming UDP port 14540 using your firewall configuration.</p>
+  </li>
+  <li>Now run your Unreal AirSim environment and it should connect to SITL PX4 via TCP. You should see
+a bunch of messages from the SITL PX4 window. Specifically, the following messages tell you that
+AirSim is connected properly and GPS fusion is stable:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> INFO  [simulator] Simulator connected on UDP port 14560
+ INFO  [mavlink] partner IP: 127.0.0.1
+ INFO  [ecl/EKF] EKF GPS checks passed (WGS-84 origin set)
+ INFO  [ecl/EKF] EKF commencing GPS fusion
+</code></pre></div>    </div>
+
+    <p>If you do not see these messages then check your port settings.</p>
+  </li>
+  <li>You should also be able to use QGroundControl with SITL mode.  Make sure there is no Pixhawk
+hardware plugged in, otherwise QGroundControl will choose to use that instead.  Note that as we
+don’t have a physical board, an RC cannot be connected directly to it. So the alternatives are
+either use XBox 360 Controller or connect your RC using USB (for example, in case of FrSky
+Taranis X9D Plus) or using trainer USB cable to your PC. This makes your RC look like a joystick.
+You will need to do extra set up in QGroundControl to use virtual joystick for RC control.  You
+do not need to do this unless you plan to fly a drone manually in AirSim.  Autonomous flight
+using the Python API does not require RC, see <code class="language-plaintext highlighter-rouge">No Remote Control</code> below.</li>
+</ol>
+
+<h2 id="setting-gps-origin">Setting GPS origin</h2>
+
+<p>Notice the above settings are provided in the <code class="language-plaintext highlighter-rouge">params</code> section of the <code class="language-plaintext highlighter-rouge">settings.json</code> file:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    "LPE_LAT": 47.641468,
+    "LPE_LON": -122.140165,
+</code></pre></div></div>
+
+<p>PX4 SITL mode needs to be configured to get the home location correct.
+The home location needs to be set to the same coordinates defined in  <a href="settings.md#origingeopoint">OriginGeopoint</a>.</p>
+
+<p>You can also run the following in the SITL PX4 console window to check
+that these values are set correctly.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>param show LPE_LAT
+param show LPE_LON
+</code></pre></div></div>
+
+<h2 id="smooth-offboard-transitions">Smooth Offboard Transitions</h2>
+
+<p>Notice the above setting is provided in the <code class="language-plaintext highlighter-rouge">params</code> section of the <code class="language-plaintext highlighter-rouge">settings.json</code> file:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    "COM_OBL_ACT": 1
+</code></pre></div></div>
+
+<p>This tells the drone automatically hover after each offboard control command finishes (the default
+setting is to land).  Hovering is a smoother transition between multiple offboard commands.  You can
+check this setting by running the following PX4 console command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>param show COM_OBL_ACT
+</code></pre></div></div>
+
+<h2 id="check-the-home-position">Check the Home Position</h2>
+
+<p>If you are using DroneShell to execute commands (arm, takeoff, etc) then you should wait until the
+Home position is set. You will see the PX4 SITL console output this message:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INFO  [commander] home: 47.6414680, -122.1401672, 119.99
+INFO  [tone_alarm] home_set
+</code></pre></div></div>
+
+<p>Now DroneShell ‘pos’ command should report this position and the commands should be accepted by PX4.
+If you attempt to takeoff without a home position you will see the message:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WARN  [commander] Takeoff denied, disarm and re-try
+</code></pre></div></div>
+
+<p>After home position is set check the local position reported by ‘pos’ command :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Local position: x=-0.0326988, y=0.00656854, z=5.48506
+</code></pre></div></div>
+
+<p>If the z coordinate is large like this then takeoff might not work as expected.  Resetting the SITL
+and simulation should fix that problem.</p>
+
+<h2 id="wsl-2">WSL 2</h2>
+
+<p>Windows Subsystem for Linux version 2 operates in a Virtual Machine.  This requires
+additional setup - see <a href="px4_sitl_wsl2.md">additional instructions</a>.</p>
+
+<h2 id="no-remote-control">No Remote Control</h2>
+
+<p>Notice the above setting is provided in the <code class="language-plaintext highlighter-rouge">params</code> section of the <code class="language-plaintext highlighter-rouge">settings.json</code> file:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    "NAV_RCL_ACT": 0,
+    "NAV_DLL_ACT": 0,
+</code></pre></div></div>
+
+<p>This is required if you plan to fly the SITL mode PX4 with no remote control, just using python
+scripts, for example.  These parameters stop the PX4 from triggering “failsafe mode on” every time a
+move command is finished.  You can use the following PX4 command to check these values are set
+correctly:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>param show NAV_RCL_ACT
+param show NAV_DLL_ACT
+</code></pre></div></div>
+
+<p>NOTE: Do <code class="language-plaintext highlighter-rouge">NOT</code> do this on a real drone as it is too dangerous to fly without these failsafe measures.</p>
+
+<h2 id="manually-set-parameters">Manually set parameters</h2>
+
+<p>You can also run the following in the PX4 console to set all these parameters manually:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>param set NAV_RCL_ACT 0
+param set NAV_DLL_ACT 0
+</code></pre></div></div>
+
+<h2 id="setting-up-multi-vehicle-simulation">Setting up multi-vehicle simulation</h2>
+
+<p>You can simulate multiple drones in SITL mode using AirSim. However, this requires setting up
+multiple instances of the PX4 firmware simulator to be able to listen for each vehicle’s connection
+on a separate TCP port (4560, 4561, etc). Please see <a href="px4_multi_vehicle.md">this dedicated page</a> for
+instructions on setting up multiple instances of PX4 in SITL mode.</p>
+
+<h2 id="using-virtualbox-ubuntu">Using VirtualBox Ubuntu</h2>
+
+<p>If you want to run the above posix_sitl in a <code class="language-plaintext highlighter-rouge">VirtualBox Ubuntu</code> machine then it will have a
+different ip address from localhost. So in this case you need to edit the <a href="settings.md">settings
+file</a> and change the UdpIp and SitlIp to the ip address of your virtual machine set the
+LocalIpAddress to the address of your host machine running the Unreal engine.</p>
+
+<h2 id="remote-controller">Remote Controller</h2>
+
+<p>There are several options for flying the simulated drone using a remote control or joystick like
+xbox gamepad. See <a href="remote_control.md#rc-setup-for-px4">remote controllers</a></p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

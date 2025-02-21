@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Modern C++ Coding Guidelines | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Modern C++ Coding Guidelines" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/coding_guidelines.html" />
+<meta property="og:url" content="http://localhost:4000/docs/coding_guidelines.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Modern C++ Coding Guidelines" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/coding_guidelines.html","headline":"Modern C++ Coding Guidelines","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="modern-c-coding-guidelines">Modern C++ Coding Guidelines</h1>
+
+<p>We are using Modern C++11. Smart pointers, Lambdas, and C++11 multithreading primitives are your friend.</p>
+
+<h2 id="quick-note">Quick Note</h2>
+
+<p>The great thing about “standards” is that there are many to chose from: <a href="https://isocpp.org/wiki/faq/coding-standards">ISO</a>, <a href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md">Sutter &amp; Stroustrup</a>, <a href="http://wiki.ros.org/CppStyleGuide">ROS</a>, <a href="https://www.kernel.org/doc/Documentation/process/coding-style.rst">LINUX</a>, <a href="https://google.github.io/styleguide/cppguide.html">Google’s</a>, <a href="https://msdn.microsoft.com/en-us/library/888a6zcz.aspx">Microsoft’s</a>, <a href="http://atlas-computing.web.cern.ch/atlas-computing/projects/qa/draft_guidelines.html">CERN’s</a>, <a href="https://gcc.gnu.org/wiki/CppConventions">GCC’s</a>, <a href="http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0475c/CJAJAJCJ.html">ARM’s</a>, <a href="http://llvm.org/docs/CodingStandards.html">LLVM’s</a> and probably 
+thousands of others. Unfortunately most of these can’t even agree on something as basic as how to name a class or a constant. This is probably due to the fact that these standards often carry lots of  legacy issues due to supporting existing code bases. The intention behind this document is to create guidance that remains as close to ISO, Sutter &amp; Stroustrup and ROS while resolving as many conflicts, disadvantages and inconsistencies as possible among them.</p>
+
+<h2 id="clang-format">clang-format</h2>
+
+<p>Formatting the syntax of C++ is normalized by the clang-format tool which has settings checked into
+this project in the file <code class="language-plaintext highlighter-rouge">.clang-format</code>. These settings are set to match the formatting guidelines
+listed below.  You can “format” a file using clang-format command line or by enabling Visual Studio
+automatic-clang formatting either during every edit or when you save the file.  All files have been
+formatted this way and the github workflow called <code class="language-plaintext highlighter-rouge">clang-format</code> will also ensure all pull requests
+are correctly formatted so it should stay clean.  Obviously this does not include external code like
+<code class="language-plaintext highlighter-rouge">Eigen</code> or <code class="language-plaintext highlighter-rouge">rpclib</code>.</p>
+
+<p>If you find a bug in clang-format you can disable clang formatting of a specific block of code by
+using the following comments pair:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// clang-format off</span>
+<span class="p">...</span>
+<span class="c1">// clang-format on</span>
+</code></pre></div></div>
+
+<h2 id="naming-conventions">Naming Conventions</h2>
+
+<p>Avoid using any sort of Hungarian notation on names and “_ptr” on pointers.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Code Element</strong></th>
+      <th><strong>Style</strong></th>
+      <th><strong>Comment</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Namespace</td>
+      <td>under_scored</td>
+      <td>Differentiate from class names</td>
+    </tr>
+    <tr>
+      <td>Class name</td>
+      <td>CamelCase</td>
+      <td>To differentiate from STL types which ISO recommends (do not use “C” or “T” prefixes)</td>
+    </tr>
+    <tr>
+      <td>Function name</td>
+      <td>camelCase</td>
+      <td>Lower case start is almost universal except for .Net world</td>
+    </tr>
+    <tr>
+      <td>Parameters/Locals</td>
+      <td>under_scored</td>
+      <td>Vast majority of standards recommends this because _ is more readable to C++ crowd (although not much to Java/.Net crowd)</td>
+    </tr>
+    <tr>
+      <td>Member variables</td>
+      <td>under_scored_with_</td>
+      <td>The prefix _ is heavily discouraged as ISO has rules around reserving _identifiers, so we recommend suffix instead</td>
+    </tr>
+    <tr>
+      <td>Enums and its members</td>
+      <td>CamelCase</td>
+      <td>Most except very old standards agree with this one</td>
+    </tr>
+    <tr>
+      <td>Globals</td>
+      <td>g_under_scored</td>
+      <td>You shouldn’t have these in first place!</td>
+    </tr>
+    <tr>
+      <td>Constants</td>
+      <td>UPPER_CASE</td>
+      <td>Very contentious and we just have to pick one here, unless if is a private constant in class or method, then use naming for Members or Locals</td>
+    </tr>
+    <tr>
+      <td>File names</td>
+      <td>Match case of class name in file</td>
+      <td>Lot of pro and cons either way but this removes inconsistency in auto generated code (important for ROS)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="header-files">Header Files</h2>
+
+<p>Use a namespace qualified #ifdef to protect against multiple inclusion:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#ifndef msr_airsim_MyHeader_hpp
+#define msr_airsim_MyHeader_hpp
+
+//--your code
+
+#endif
+</code></pre></div></div>
+
+<p>The reason we don’t use #pragma once is because it’s not supported if same header file exists at multiple places (which might be possible under ROS build system!).</p>
+
+<h2 id="bracketing">Bracketing</h2>
+
+<p>Inside function or method body place curly bracket on same line. 
+Outside that the Namespace, Class and methods levels use separate line.
+This is called <a href="https://en.wikipedia.org/wiki/Indent_style#K.26R_style">K&amp;R style</a> and its variants are widely used in C++ vs other styles which are more popular in other languages. 
+Notice that curlies are not required if you have single statement, but complex statements are easier to keep correct with the braces.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main(int argc, char* argv[])
+{
+     while (x == y) {
+        f0();
+        if (cont()) {
+            f1();
+        } else {
+            f2();
+            f3();
+        }
+        if (x &gt; 100)
+            break;
+    }
+}
+</code></pre></div></div>
+
+<h2 id="const-and-references">Const and References</h2>
+
+<p>Religiously review all non-scalar parameters you declare to be candidate for const and references. If you are coming from languages such as C#/Java/Python,
+the most often mistake you would make is to pass parameters by value instead of <code class="language-plaintext highlighter-rouge">const T&amp;;</code> Especially most of the strings, vectors and maps you want to 
+pass as <code class="language-plaintext highlighter-rouge">const T&amp;;</code> (if they are readonly) or <code class="language-plaintext highlighter-rouge">T&amp;</code> (if they are writable). Also add <code class="language-plaintext highlighter-rouge">const</code> suffix to methods as much as possible.</p>
+
+<h2 id="overriding">Overriding</h2>
+<p>When overriding virtual method, use override suffix.</p>
+
+<h2 id="pointers">Pointers</h2>
+
+<p>This is really about memory management.  A simulator has much performance critical code, so we try and avoid overloading the memory manager
+with lots of calls to new/delete.  We also want to avoid too much copying of things on the stack, so we pass things by reference when ever possible.
+But when the object really needs to live longer than the call stack you often need to allocate that object on
+the heap, and so you have a pointer.  Now, if management of the lifetime of that object is going to be tricky we recommend using 
+<a href="https://cppstyle.wordpress.com/c11-smart-pointers/">C++ 11 smart pointers</a>. 
+But smart pointers do have a cost, so don’t use them blindly everywhere.  For private code 
+where performance is paramount, raw pointers can be used.  Raw pointers are also often needed when interfacing with legacy systems
+that only accept pointer types, for example, sockets API.  But we try to wrap those legacy interfaces as
+much as possible and avoid that style of programming from leaking into the larger code base.</p>
+
+<p>Religiously check if you can use const everywhere, for example, <code class="language-plaintext highlighter-rouge">const float * const xP</code>. Avoid using prefix or suffix to indicate pointer types in variable names, i.e. use <code class="language-plaintext highlighter-rouge">my_obj</code> instead of <code class="language-plaintext highlighter-rouge">myobj_ptr</code> except in cases where it might make sense to differentiate variables better, for example, <code class="language-plaintext highlighter-rouge">int mynum = 5; int* mynum_ptr = mynum;</code></p>
+
+<h2 id="null-checking">Null Checking</h2>
+
+<p>In Unreal C++ code, when checking if a pointer is null, it is preferable to use <code class="language-plaintext highlighter-rouge">IsValid(ptr)</code>. In addition to checking for a null pointer, this function will also return whether a UObject is properly initialized. This is useful in situations where a UObject is in the process of being garbage collected but still set to a non-null value.</p>
+
+<h2 id="indentation">Indentation</h2>
+
+<p>The C++ code base uses four spaces for indentation (not tabs).</p>
+
+<h2 id="line-breaks">Line Breaks</h2>
+
+<p>Files should be committed with Unix line breaks. When working on Windows, git can be configured to checkout files with Windows line breaks and automatically convert from Windows to Unix line breaks when committing by running the following command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global core.autocrlf true
+</code></pre></div></div>
+
+<p>When working on Linux, it is preferable to configure git to checkout files with Unix line breaks by running the following command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global core.autocrlf input
+</code></pre></div></div>
+
+<p>For more details on this setting, see <a href="https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings">this documentation</a>.</p>
+
+<h2 id="this-is-too-short-ye">This is Too Short, ye?</h2>
+
+<p>Yes, and it’s on purpose because no one likes to read 200 page coding guidelines. The goal here is to cover only most significant things which are 
+already not covered by <a href="http://shitalshah.com/p/how-to-enable-and-use-gcc-strict-mode-compilation/">strict mode compilation in GCC</a> and Level 4 
+warnings-as-errors in VC++. If you had like to know about how to write better code in C++, please see <a href="https://herbsutter.com/gotw/">GotW</a> 
+and <a href="http://shop.oreilly.com/product/0636920033707.do">Effective Modern C++</a> book.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

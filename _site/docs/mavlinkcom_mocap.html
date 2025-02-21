@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Welcome to MavLinkMoCap | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Welcome to MavLinkMoCap" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/mavlinkcom_mocap.html" />
+<meta property="og:url" content="http://localhost:4000/docs/mavlinkcom_mocap.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Welcome to MavLinkMoCap" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/mavlinkcom_mocap.html","headline":"Welcome to MavLinkMoCap","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="welcome-to-mavlinkmocap">Welcome to MavLinkMoCap</h1>
+
+<p>This folder contains the MavLinkMoCap library which connects to a OptiTrack camera system
+for accurate indoor location.</p>
+
+<h2 id="dependencies">Dependencies:</h2>
+<ul>
+  <li><a href="http://www.optitrack.com/products/motive/">OptiTrack Motive</a>.</li>
+  <li><a href="mavlinkcom.md">MavLinkCom</a>.</li>
+</ul>
+
+<h3 id="setup-rigidbody">Setup RigidBody</h3>
+
+<p>First you need to define a RigidBody named ‘Quadrocopter’ using Motive.
+See <a href="http://wiki.optitrack.com/index.php?title=Rigid_Body_Tracking">Rigid_Body_Tracking</a>.</p>
+
+<h3 id="mavlinktest">MavLinkTest</h3>
+
+<p>Use MavLinkTest to talk to your PX4 drone, with “-server:addr:port”, for example, when connected
+to drone wifi use:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MavLinkMoCap -server:10.42.0.228:14590 "-project:D:\OptiTrack\Motive Project 2016-12-19 04.09.42 PM.ttp" 
+</code></pre></div></div>
+
+<p>This publishes the ATT_POS_MOCAP messages and you can proxy those through to the PX4 by running 
+MavLinkTest on the dronebrain using:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MavLinkTest -serial:/dev/ttyACM0,115200 -proxy:10.42.0.228:14590
+</code></pre></div></div>
+
+<p>Now the drone will get the ATT_POS_MOCAP and you should see the light turn green meaning it is
+now has a home position and is ready to fly.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

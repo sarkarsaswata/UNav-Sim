@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>AirSim APIs | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="AirSim APIs" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/apis.html" />
+<meta property="og:url" content="http://localhost:4000/docs/apis.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="AirSim APIs" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/apis.html","headline":"AirSim APIs","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="airsim-apis">AirSim APIs</h1>
+
+<h2 id="introduction">Introduction</h2>
+<p>AirSim exposes APIs so you can interact with vehicle in the simulation programmatically. You can use these APIs to retrieve images, get state, control the vehicle and so on.</p>
+
+<h2 id="python-quickstart">Python Quickstart</h2>
+<p>If you want to use Python to call AirSim APIs, we recommend using Anaconda with Python 3.5 or later versions however some code may also work with Python 2.7 (<a href="CONTRIBUTING.md">help us</a> improve compatibility!).</p>
+
+<p>First install this package:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install msgpack-rpc-python
+</code></pre></div></div>
+
+<p>You can either get AirSim binaries from <a href="https://github.com/Microsoft/AirSim/releases">releases</a> or compile from the source (<a href="build_windows.md">Windows</a>, <a href="build_linux.md">Linux</a>). Once you can run AirSim, choose Car as vehicle and then navigate to <code class="language-plaintext highlighter-rouge">PythonClient\car\</code> folder and run:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python hello_car.py
+</code></pre></div></div>
+
+<p>If you are using Visual Studio 2019 then just open AirSim.sln, set PythonClient as startup project and choose <code class="language-plaintext highlighter-rouge">car\hello_car.py</code> as your startup script.</p>
+
+<h3 id="installing-airsim-package">Installing AirSim Package</h3>
+<p>You can also install <code class="language-plaintext highlighter-rouge">airsim</code> package simply by,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install airsim
+</code></pre></div></div>
+
+<p>You can find source code and samples for this package in <code class="language-plaintext highlighter-rouge">PythonClient</code> folder in your repo.</p>
+
+<p><strong>Notes</strong></p>
+<ol>
+  <li>You may notice a file <code class="language-plaintext highlighter-rouge">setup_path.py</code> in our example folders. This file has simple code to detect if <code class="language-plaintext highlighter-rouge">airsim</code> package is available in parent folder and in that case we use that instead of pip installed package so you always use latest code.</li>
+  <li>AirSim is still under heavy development which means you might frequently need to update the package to use new APIs.</li>
+</ol>
+
+<h2 id="c-users">C++ Users</h2>
+<p>If you want to use C++ APIs and examples, please see <a href="apis_cpp.md">C++ APIs Guide</a>.</p>
+
+<h2 id="hello-car">Hello Car</h2>
+<p>Here’s how to use AirSim APIs using Python to control simulated car (see also <a href="apis_cpp.md#hello_car">C++ example</a>):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ready to run example: PythonClient/car/hello_car.py
+</span><span class="kn">import</span> <span class="nn">airsim</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c1"># connect to the AirSim simulator
+</span><span class="n">client</span> <span class="o">=</span> <span class="n">airsim</span><span class="p">.</span><span class="n">CarClient</span><span class="p">()</span>
+<span class="n">client</span><span class="p">.</span><span class="n">confirmConnection</span><span class="p">()</span>
+<span class="n">client</span><span class="p">.</span><span class="n">enableApiControl</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">car_controls</span> <span class="o">=</span> <span class="n">airsim</span><span class="p">.</span><span class="n">CarControls</span><span class="p">()</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="c1"># get state of the car
+</span>    <span class="n">car_state</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">getCarState</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Speed %d, Gear %d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">car_state</span><span class="p">.</span><span class="n">speed</span><span class="p">,</span> <span class="n">car_state</span><span class="p">.</span><span class="n">gear</span><span class="p">))</span>
+
+    <span class="c1"># set the controls for car
+</span>    <span class="n">car_controls</span><span class="p">.</span><span class="n">throttle</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">car_controls</span><span class="p">.</span><span class="n">steering</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">client</span><span class="p">.</span><span class="n">setCarControls</span><span class="p">(</span><span class="n">car_controls</span><span class="p">)</span>
+
+    <span class="c1"># let car drive a bit
+</span>    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># get camera images from the car
+</span>    <span class="n">responses</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">simGetImages</span><span class="p">([</span>
+        <span class="n">airsim</span><span class="p">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">airsim</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">DepthVis</span><span class="p">),</span>
+        <span class="n">airsim</span><span class="p">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">airsim</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">DepthPlanar</span><span class="p">,</span> <span class="bp">True</span><span class="p">)])</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Retrieved images: %d'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">))</span>
+
+    <span class="c1"># do something with images
+</span>    <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="n">pixels_as_float</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Type %d, size %d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_type</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_data_float</span><span class="p">)))</span>
+            <span class="n">airsim</span><span class="p">.</span><span class="n">write_pfm</span><span class="p">(</span><span class="s">'py1.pfm'</span><span class="p">,</span> <span class="n">airsim</span><span class="p">.</span><span class="n">get_pfm_array</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Type %d, size %d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_type</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_data_uint8</span><span class="p">)))</span>
+            <span class="n">airsim</span><span class="p">.</span><span class="n">write_file</span><span class="p">(</span><span class="s">'py1.png'</span><span class="p">,</span> <span class="n">response</span><span class="p">.</span><span class="n">image_data_uint8</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h2 id="hello-drone">Hello Drone</h2>
+<p>Here’s how to use AirSim APIs using Python to control simulated quadrotor (see also <a href="apis_cpp.md#hello_drone">C++ example</a>):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ready to run example: PythonClient/multirotor/hello_drone.py
+</span><span class="kn">import</span> <span class="nn">airsim</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># connect to the AirSim simulator
+</span><span class="n">client</span> <span class="o">=</span> <span class="n">airsim</span><span class="p">.</span><span class="n">MultirotorClient</span><span class="p">()</span>
+<span class="n">client</span><span class="p">.</span><span class="n">confirmConnection</span><span class="p">()</span>
+<span class="n">client</span><span class="p">.</span><span class="n">enableApiControl</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">client</span><span class="p">.</span><span class="n">armDisarm</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># Async methods returns Future. Call join() to wait for task to complete.
+</span><span class="n">client</span><span class="p">.</span><span class="n">takeoffAsync</span><span class="p">().</span><span class="n">join</span><span class="p">()</span>
+<span class="n">client</span><span class="p">.</span><span class="n">moveToPositionAsync</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">).</span><span class="n">join</span><span class="p">()</span>
+
+<span class="c1"># take images
+</span><span class="n">responses</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">simGetImages</span><span class="p">([</span>
+    <span class="n">airsim</span><span class="p">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="s">"0"</span><span class="p">,</span> <span class="n">airsim</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">DepthVis</span><span class="p">),</span>
+    <span class="n">airsim</span><span class="p">.</span><span class="n">ImageRequest</span><span class="p">(</span><span class="s">"1"</span><span class="p">,</span> <span class="n">airsim</span><span class="p">.</span><span class="n">ImageType</span><span class="p">.</span><span class="n">DepthPlanar</span><span class="p">,</span> <span class="bp">True</span><span class="p">)])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Retrieved images: %d'</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">))</span>
+
+<span class="c1"># do something with the images
+</span><span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="n">pixels_as_float</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Type %d, size %d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_type</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_data_float</span><span class="p">)))</span>
+        <span class="n">airsim</span><span class="p">.</span><span class="n">write_pfm</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="s">'/temp/py1.pfm'</span><span class="p">),</span> <span class="n">airsim</span><span class="p">.</span><span class="n">get_pfm_array</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Type %d, size %d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_type</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">image_data_uint8</span><span class="p">)))</span>
+        <span class="n">airsim</span><span class="p">.</span><span class="n">write_file</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">normpath</span><span class="p">(</span><span class="s">'/temp/py1.png'</span><span class="p">),</span> <span class="n">response</span><span class="p">.</span><span class="n">image_data_uint8</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="common-apis">Common APIs</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">reset</code>: This resets the vehicle to its original starting state. Note that you must call <code class="language-plaintext highlighter-rouge">enableApiControl</code> and <code class="language-plaintext highlighter-rouge">armDisarm</code> again after the call to <code class="language-plaintext highlighter-rouge">reset</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">confirmConnection</code>: Checks state of connection every 1 sec and reports it in Console so user can see the progress for connection.</li>
+  <li><code class="language-plaintext highlighter-rouge">enableApiControl</code>: For safety reasons, by default API control for autonomous vehicle is not enabled and human operator has full control (usually via RC or joystick in simulator). The client must make this call to request control via API. It is likely that human operator of vehicle might have disallowed API control which would mean that enableApiControl has no effect. This can be checked by <code class="language-plaintext highlighter-rouge">isApiControlEnabled</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">isApiControlEnabled</code>: Returns true if API control is established. If false (which is default) then API calls would be ignored. After a successful call to <code class="language-plaintext highlighter-rouge">enableApiControl</code>, the <code class="language-plaintext highlighter-rouge">isApiControlEnabled</code> should return true.</li>
+  <li><code class="language-plaintext highlighter-rouge">ping</code>: If connection is established then this call will return true otherwise it will be blocked until timeout.</li>
+  <li><code class="language-plaintext highlighter-rouge">simPrintLogMessage</code>: Prints the specified message in the simulator’s window. If message_param is also supplied then its printed next to the message and in that case if this API is called with same message value but different message_param again then previous line is overwritten with new line (instead of API creating new line on display). For example, <code class="language-plaintext highlighter-rouge">simPrintLogMessage("Iteration: ", to_string(i))</code> keeps updating same line on display when API is called with different values of i. The valid values of severity parameter is 0 to 3 inclusive that corresponds to different colors.</li>
+  <li><code class="language-plaintext highlighter-rouge">simGetObjectPose</code>, <code class="language-plaintext highlighter-rouge">simSetObjectPose</code>: Gets and sets the pose of specified object in Unreal environment. Here the object means “actor” in Unreal terminology. They are searched by tag as well as name. Please note that the names shown in UE Editor are <em>auto-generated</em> in each run and are not permanent. So if you want to refer to actor by name, you must change its auto-generated name in UE Editor. Alternatively you can add a tag to actor which can be done by clicking on that actor in Unreal Editor and then going to <a href="https://answers.unrealengine.com/questions/543807/whats-the-difference-between-tag-and-tag.html">Tags property</a>, click “+” sign and add some string value. If multiple actors have same tag then the first match is returned. If no matches are found then NaN pose is returned. The returned pose is in NED coordinates in SI units in the world frame. For <code class="language-plaintext highlighter-rouge">simSetObjectPose</code>, the specified actor must have <a href="https://docs.unrealengine.com/en-us/Engine/Actors/Mobility">Mobility</a> set to Movable or otherwise you will get undefined behavior. The <code class="language-plaintext highlighter-rouge">simSetObjectPose</code> has parameter <code class="language-plaintext highlighter-rouge">teleport</code> which means object is <a href="https://www.unrealengine.com/en-US/blog/moving-physical-objects">moved through other objects</a> in its way and it returns true if move was successful</li>
+</ul>
+
+<h3 id="image--computer-vision-apis">Image / Computer Vision APIs</h3>
+<p>AirSim offers comprehensive images APIs to retrieve synchronized images from multiple cameras along with ground truth including depth, disparity, surface normals and vision. You can set the resolution, FOV, motion blur etc parameters in <a href="settings.md">settings.json</a>. There is also API for detecting collision state. See also <a href="https://github.com/Microsoft/AirSim/tree/main/Examples/DataCollection/StereoImageGenerator.hpp">complete code</a> that generates specified number of stereo images and ground truth depth with normalization to camera plane, computation of disparity image and saving it to <a href="pfm.md">pfm format</a>.</p>
+
+<p>More on <a href="image_apis.md">image APIs and Computer Vision mode</a>.
+For vision problems that can benefit from domain randomization, there is also an <a href="retexturing.md">object retexturing API</a>, which can be used in supported scenes.</p>
+
+<h3 id="pause-and-continue-apis">Pause and Continue APIs</h3>
+<p>AirSim allows to pause and continue the simulation through <code class="language-plaintext highlighter-rouge">pause(is_paused)</code> API. To pause the simulation call <code class="language-plaintext highlighter-rouge">pause(True)</code> and to continue the simulation call <code class="language-plaintext highlighter-rouge">pause(False)</code>. You may have scenario, especially while using reinforcement learning, to run the simulation for specified amount of time and then automatically pause. While simulation is paused, you may then do some expensive computation, send a new command and then again run the simulation for specified amount of time. This can be achieved by API <code class="language-plaintext highlighter-rouge">continueForTime(seconds)</code>. This API runs the simulation for the specified number of seconds and then pauses the simulation. For example usage, please see <a href="https://github.com/Microsoft/AirSim/tree/main/PythonClient//car/pause_continue_car.py">pause_continue_car.py</a> and <a href="https://github.com/Microsoft/AirSim/tree/main/PythonClient//multirotor/pause_continue_drone.py">pause_continue_drone.py</a>.</p>
+
+<h3 id="collision-api">Collision API</h3>
+<p>The collision information can be obtained using <code class="language-plaintext highlighter-rouge">simGetCollisionInfo</code> API. This call returns a struct that has information not only whether collision occurred but also collision position, surface normal, penetration depth and so on.</p>
+
+<h3 id="time-of-day-api">Time of Day API</h3>
+<p>AirSim assumes there exist sky sphere of class <code class="language-plaintext highlighter-rouge">EngineSky/BP_Sky_Sphere</code> in your environment with <a href="https://github.com/microsoft/AirSim/blob/v1.4.0-linux/Unreal/Plugins/AirSim/Source/SimMode/SimModeBase.cpp#L224">ADirectionalLight actor</a>. By default, the position of the sun in the scene doesn’t move with time. You can use <a href="settings.md#timeofday">settings</a> to set up latitude, longitude, date and time which AirSim uses to compute the position of sun in the scene.</p>
+
+<p>You can also use following API call to set the sun position according to given date time:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>simSetTimeOfDay(self, is_enabled, start_datetime = "", is_start_datetime_dst = False, celestial_clock_speed = 1, update_interval_secs = 60, move_sun = True)
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">is_enabled</code> parameter must be <code class="language-plaintext highlighter-rouge">True</code> to enable time of day effect. If it is <code class="language-plaintext highlighter-rouge">False</code> then sun position is reset to its original in the environment.</p>
+
+<p>Other parameters are same as in <a href="settings.md#timeofday">settings</a>.</p>
+
+<h3 id="line-of-sight-and-world-extent-apis">Line-of-sight and world extent APIs</h3>
+<p>To test line-of-sight in the sim from a vehicle to a point or between two points, see simTestLineOfSightToPoint(point, vehicle_name) and simTestLineOfSightBetweenPoints(point1, point2), respectively.
+Sim world extent, in the form of a vector of two GeoPoints, can be retrieved using simGetWorldExtents().</p>
+
+<h3 id="weather-apis">Weather APIs</h3>
+<p>By default all weather effects are disabled. To enable weather effect, first call:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>simEnableWeather(True)
+</code></pre></div></div>
+
+<p>Various weather effects can be enabled by using <code class="language-plaintext highlighter-rouge">simSetWeatherParameter</code> method which takes <code class="language-plaintext highlighter-rouge">WeatherParameter</code>, for example,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.simSetWeatherParameter(airsim.WeatherParameter.Rain, 0.25);
+</code></pre></div></div>
+<p>The second parameter value is from 0 to 1. The first parameter provides following options:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class WeatherParameter:
+    Rain = 0
+    Roadwetness = 1
+    Snow = 2
+    RoadSnow = 3
+    MapleLeaf = 4
+    RoadLeaf = 5
+    Dust = 6
+    Fog = 7
+</code></pre></div></div>
+
+<p>Please note that <code class="language-plaintext highlighter-rouge">Roadwetness</code>, <code class="language-plaintext highlighter-rouge">RoadSnow</code> and <code class="language-plaintext highlighter-rouge">RoadLeaf</code> effects requires adding <a href="https://github.com/Microsoft/AirSim/tree/main/Unreal/Plugins/AirSim/Content/Weather/WeatherFX">materials</a> to your scene.</p>
+
+<p>Please see <a href="https://github.com/Microsoft/AirSim/blob/main/PythonClient/environment/weather.py">example code</a> for more details.</p>
+
+<h3 id="recording-apis">Recording APIs</h3>
+
+<p>Recording APIs can be used to start recording data through APIs. Data to be recorded can be specified using <a href="settings.md#recording">settings</a>. To start recording, use -</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.startRecording()
+</code></pre></div></div>
+
+<p>Similarly, to stop recording, use <code class="language-plaintext highlighter-rouge">client.stopRecording()</code>. To check whether Recording is running, call <code class="language-plaintext highlighter-rouge">client.isRecording()</code>, returns a <code class="language-plaintext highlighter-rouge">bool</code>.</p>
+
+<p>This API works alongwith toggling Recording using R button, therefore if it’s enabled using R key, <code class="language-plaintext highlighter-rouge">isRecording()</code> will return <code class="language-plaintext highlighter-rouge">True</code>, and recording can be stopped via API using <code class="language-plaintext highlighter-rouge">stopRecording()</code>. Similarly, recording started using API will be stopped if R key is pressed in Viewport. LogMessage will also appear in the top-left of the viewport if recording is started or stopped using API.</p>
+
+<p>Note that this will only save the data as specfied in the settings. For full freedom in storing data such as certain sensor information, or in a different format or layout, use the other APIs to fetch the data and save as desired. Check out <a href="modify_recording_data.md">Modifying Recording Data</a> for details on how to modify the kinematics data being recorded.</p>
+
+<h3 id="wind-api">Wind API</h3>
+
+<p>Wind can be changed during simulation using <code class="language-plaintext highlighter-rouge">simSetWind()</code>. Wind is specified in World frame, NED direction and m/s values</p>
+
+<p>E.g. To set 20m/s wind in North (forward) direction -</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Set wind to (20,0,0) in NED (forward direction)
+</span><span class="n">wind</span> <span class="o">=</span> <span class="n">airsim</span><span class="p">.</span><span class="n">Vector3r</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">client</span><span class="p">.</span><span class="n">simSetWind</span><span class="p">(</span><span class="n">wind</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Also see example script in <a href="https://github.com/Microsoft/AirSim/blob/main/PythonClient/multirotor/set_wind.py">set_wind.py</a></p>
+
+<h3 id="lidar-apis">Lidar APIs</h3>
+<p>AirSim offers API to retrieve point cloud data from Lidar sensors on vehicles. You can set the number of channels, points per second, horizontal and vertical FOV, etc parameters in <a href="settings.md">settings.json</a>.</p>
+
+<p>More on <a href="lidar.md">lidar APIs and settings</a> and <a href="sensors.md">sensor settings</a></p>
+
+<h3 id="light-control-apis">Light Control APIs</h3>
+
+<p>Lights that can be manipulated inside AirSim can be created via the <code class="language-plaintext highlighter-rouge">simSpawnObject()</code> API by passing either <code class="language-plaintext highlighter-rouge">PointLightBP</code> or <code class="language-plaintext highlighter-rouge">SpotLightBP</code> as the <code class="language-plaintext highlighter-rouge">asset_name</code> parameter and <code class="language-plaintext highlighter-rouge">True</code> as the <code class="language-plaintext highlighter-rouge">is_blueprint</code> parameter. Once a light has been spawned, it can be manipulated using the following API:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">simSetLightIntensity</code>: This allows you to edit a light’s intensity or brightness. It takes two parameters, <code class="language-plaintext highlighter-rouge">light_name</code>, the name of the light object returned by a previous call to <code class="language-plaintext highlighter-rouge">simSpawnObject()</code>, and <code class="language-plaintext highlighter-rouge">intensity</code>, a float value.</li>
+</ul>
+
+<h3 id="texture-apis">Texture APIs</h3>
+
+<p>Textures can be dynamically set on objects via these APIs:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">simSetObjectMaterial</code>: This sets an object’s material using an existing Unreal material asset. It takes two string parameters, <code class="language-plaintext highlighter-rouge">object_name</code> and <code class="language-plaintext highlighter-rouge">material_name</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">simSetObjectMaterialFromTexture</code>: This sets an object’s material using a path to a texture. It takes two string parameters, <code class="language-plaintext highlighter-rouge">object_name</code> and <code class="language-plaintext highlighter-rouge">texture_path</code>.</li>
+</ul>
+
+<h3 id="multiple-vehicles">Multiple Vehicles</h3>
+<p>AirSim supports multiple vehicles and control them through APIs. Please <a href="multi_vehicle.md">Multiple Vehicles</a> doc.</p>
+
+<h3 id="coordinate-system">Coordinate System</h3>
+<p>All AirSim API uses NED coordinate system, i.e., +X is North, +Y is East and +Z is Down. All units are in SI system. Please note that this is different from coordinate system used internally by Unreal Engine. In Unreal Engine, +Z is up instead of down and length unit is in centimeters instead of meters. AirSim APIs takes care of the appropriate conversions. The starting point of the vehicle is always coordinates (0, 0, 0) in NED system. Thus when converting from Unreal coordinates to NED, we first subtract the starting offset and then scale by 100 for cm to m conversion. The vehicle is spawned in Unreal environment where the Player Start component is placed. There is a setting called <code class="language-plaintext highlighter-rouge">OriginGeopoint</code> in <a href="settings.md">settings.json</a> which assigns geographic longitude, longitude and altitude to the Player Start component.</p>
+
+<h2 id="vehicle-specific-apis">Vehicle Specific APIs</h2>
+<h3 id="apis-for-car">APIs for Car</h3>
+<p>Car has followings APIs available:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">setCarControls</code>: This allows you to set throttle, steering, handbrake and auto or manual gear.</li>
+  <li><code class="language-plaintext highlighter-rouge">getCarState</code>: This retrieves the state information including speed, current gear and 6 kinematics quantities: position, orientation, linear and angular velocity, linear and angular acceleration. All quantities are in NED coordinate system, SI units in world frame except for angular velocity and accelerations which are in body frame.</li>
+  <li><a href="image_apis.md">Image APIs</a>.</li>
+</ul>
+
+<h3 id="apis-for-multirotor">APIs for Multirotor</h3>
+<p>Multirotor can be controlled by specifying angles, velocity vector, destination position or some combination of these. There are corresponding <code class="language-plaintext highlighter-rouge">move*</code> APIs for this purpose. When doing position control, we need to use some path following algorithm. By default AirSim uses carrot following algorithm. This is often referred to as “high level control” because you just need to specify high level goal and the firmware takes care of the rest. Currently lowest level control available in AirSim is <code class="language-plaintext highlighter-rouge">moveByAngleThrottleAsync</code> API.</p>
+
+<h4 id="getmultirotorstate">getMultirotorState</h4>
+<p>This API returns the state of the vehicle in one call. The state includes, collision, estimated kinematics (i.e. kinematics computed by fusing sensors), and timestamp (nano seconds since epoch). The kinematics here means 6 quantities: position, orientation, linear and angular velocity, linear and angular acceleration. Please note that simple_slight currently doesn’t support state estimator which means estimated and ground truth kinematics values would be same for simple_flight. Estimated kinematics are however available for PX4 except for angular acceleration. All quantities are in NED coordinate system, SI units in world frame except for angular velocity and accelerations which are in body frame.</p>
+
+<h4 id="async-methods-duration-and-max_wait_seconds">Async methods, duration and max_wait_seconds</h4>
+<p>Many API methods has parameters named <code class="language-plaintext highlighter-rouge">duration</code> or <code class="language-plaintext highlighter-rouge">max_wait_seconds</code> and they have <em>Async</em> as suffix, for example, <code class="language-plaintext highlighter-rouge">takeoffAsync</code>. These methods will return immediately after starting the task in AirSim so that your client code can do something else while that task is being executed. If you want to wait for this task to complete then you can call <code class="language-plaintext highlighter-rouge">waitOnLastTask</code> like this:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//C++</span>
+<span class="n">client</span><span class="p">.</span><span class="n">takeoffAsync</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">waitOnLastTask</span><span class="p">();</span>
+</code></pre></div></div>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp"># Python
+</span><span class="n">client</span><span class="p">.</span><span class="n">takeoffAsync</span><span class="p">().</span><span class="n">join</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>If you start another command then it automatically cancels the previous task and starts new command. This allows to use pattern where your coded continuously does the sensing, computes a new trajectory to follow and issues that path to vehicle in AirSim. Each newly issued trajectory cancels the previous trajectory allowing your code to continuously do the update as new sensor data arrives.</p>
+
+<p>All <em>Async</em> method returns <code class="language-plaintext highlighter-rouge">concurrent.futures.Future</code> in Python (<code class="language-plaintext highlighter-rouge">std::future</code> in C++). Please note that these future classes currently do not allow to check status or cancel the task; they only allow to wait for task to complete. AirSim does provide API <code class="language-plaintext highlighter-rouge">cancelLastTask</code>, however.</p>
+
+<h4 id="drivetrain">drivetrain</h4>
+<p>There are two modes you can fly vehicle: <code class="language-plaintext highlighter-rouge">drivetrain</code> parameter is set to <code class="language-plaintext highlighter-rouge">airsim.DrivetrainType.ForwardOnly</code> or <code class="language-plaintext highlighter-rouge">airsim.DrivetrainType.MaxDegreeOfFreedom</code>. When you specify ForwardOnly, you are saying that vehicle’s front should always point in the direction of travel. So if you want drone to take left turn then it would first rotate so front points to left. This mode is useful when you have only front camera and you are operating vehicle using FPV view. This is more or less like travelling in car where you always have front view. The MaxDegreeOfFreedom means you don’t care where the front points to. So when you take left turn, you just start going left like crab. Quadrotors can go in any direction regardless of where front points to. The MaxDegreeOfFreedom enables this mode.</p>
+
+<h4 id="yaw_mode">yaw_mode</h4>
+<p><code class="language-plaintext highlighter-rouge">yaw_mode</code> is a struct <code class="language-plaintext highlighter-rouge">YawMode</code> with two fields, <code class="language-plaintext highlighter-rouge">yaw_or_rate</code> and <code class="language-plaintext highlighter-rouge">is_rate</code>. If <code class="language-plaintext highlighter-rouge">is_rate</code> field is True then <code class="language-plaintext highlighter-rouge">yaw_or_rate</code> field is interpreted as angular velocity in degrees/sec which means you want vehicle to rotate continuously around its axis at that angular velocity while moving. If <code class="language-plaintext highlighter-rouge">is_rate</code> is False then <code class="language-plaintext highlighter-rouge">yaw_or_rate</code> is interpreted as angle in degrees which means you want vehicle to rotate to specific angle (i.e. yaw) and keep that angle while moving.</p>
+
+<p>You can probably see that when <code class="language-plaintext highlighter-rouge">yaw_mode.is_rate == true</code>, the <code class="language-plaintext highlighter-rouge">drivetrain</code> parameter shouldn’t be set to <code class="language-plaintext highlighter-rouge">ForwardOnly</code> because you are contradicting by saying that keep front pointing ahead but also rotate continuously. However if you have <code class="language-plaintext highlighter-rouge">yaw_mode.is_rate = false</code> in <code class="language-plaintext highlighter-rouge">ForwardOnly</code> mode then you can do some funky stuff. For example, you can have drone do circles and have yaw_or_rate set to 90 so camera is always pointed to center (“super cool selfie mode”). In <code class="language-plaintext highlighter-rouge">MaxDegreeofFreedom</code> also you can get some funky stuff by setting <code class="language-plaintext highlighter-rouge">yaw_mode.is_rate = true</code> and say <code class="language-plaintext highlighter-rouge">yaw_mode.yaw_or_rate = 20</code>. This will cause drone to go in its path while rotating which may allow to do 360 scanning.</p>
+
+<p>In most cases, you just don’t want yaw to change which you can do by setting yaw rate of 0. The shorthand for this is <code class="language-plaintext highlighter-rouge">airsim.YawMode.Zero()</code> (or in C++: <code class="language-plaintext highlighter-rouge">YawMode::Zero()</code>).</p>
+
+<h4 id="lookahead-and-adaptive_lookahead">lookahead and adaptive_lookahead</h4>
+<p>When you ask vehicle to follow a path, AirSim uses “carrot following” algorithm. This algorithm operates by looking ahead on path and adjusting its velocity vector. The parameters for this algorithm is specified by <code class="language-plaintext highlighter-rouge">lookahead</code> and <code class="language-plaintext highlighter-rouge">adaptive_lookahead</code>. For most of the time you want algorithm to auto-decide the values by simply setting <code class="language-plaintext highlighter-rouge">lookahead = -1</code> and <code class="language-plaintext highlighter-rouge">adaptive_lookahead = 0</code>.</p>
+
+<h2 id="using-apis-on-real-vehicles">Using APIs on Real Vehicles</h2>
+<p>We want to be able to run <em>same code</em> that runs in simulation as on real vehicle. This allows you to test your code in simulator and deploy to real vehicle.</p>
+
+<p>Generally speaking, APIs therefore shouldn’t allow you to do something that cannot be done on real vehicle (for example, getting the ground truth). But, of course, simulator has much more information and it would be useful in applications that may not care about running things on real vehicle. For this reason, we clearly delineate between sim-only APIs by attaching <code class="language-plaintext highlighter-rouge">sim</code> prefix, for example, <code class="language-plaintext highlighter-rouge">simGetGroundTruthKinematics</code>. This way you can avoid using these simulation-only APIs if you care about running your code on real vehicles.</p>
+
+<p>The AirLib is self-contained library that you can put on an offboard computing module such as the Gigabyte barebone Mini PC. This module then can talk to the flight controllers such as PX4 using exact same code and flight controller protocol. The code you write for testing in the simulator remains unchanged. See <a href="custom_drone.md">AirLib on custom drones</a>.</p>
+
+<h2 id="adding-new-apis-to-airsim">Adding New APIs to AirSim</h2>
+
+<p>See the <a href="adding_new_apis.md">Adding New APIs</a> page</p>
+
+<h2 id="references-and-examples">References and Examples</h2>
+
+<ul>
+  <li><a href="apis_cpp.md">C++ API Examples</a></li>
+  <li><a href="https://github.com/Microsoft/AirSim/tree/main/PythonClient//car">Car Examples</a></li>
+  <li><a href="https://github.com/Microsoft/AirSim/tree/main/PythonClient//multirotor">Multirotor Examples</a></li>
+  <li><a href="https://github.com/Microsoft/AirSim/tree/main/PythonClient//computer_vision">Computer Vision Examples</a></li>
+  <li><a href="https://github.com/Microsoft/AirSim/wiki/moveOnPath-demo">Move on Path</a> demo showing video of fast multirotor flight through Modular Neighborhood environment</li>
+  <li><a href="https://github.com/Microsoft/AirSim/wiki/hexacopter">Building a Hexacopter</a></li>
+  <li><a href="https://github.com/Microsoft/AirSim/wiki/Point-Clouds">Building Point Clouds</a></li>
+</ul>
+
+<h2 id="faq">FAQ</h2>
+
+<h4 id="unreal-is-slowed-down-dramatically-when-i-run-api">Unreal is slowed down dramatically when I run API</h4>
+<p>If you see Unreal getting slowed down dramatically when Unreal Engine window loses focus then go to ‘Edit-&gt;Editor Preferences’ in Unreal Editor, in the ‘Search’ box type ‘CPU’ and ensure that the ‘Use Less CPU when in Background’ is unchecked.</p>
+
+<h4 id="do-i-need-anything-else-on-windows">Do I need anything else on Windows?</h4>
+<p>You should install VS2019 with VC++, Windows SDK 10.0 and Python. To use Python APIs you will need Python 3.5 or later (install it using Anaconda).</p>
+
+<h4 id="which-version-of-python-should-i-use">Which version of Python should I use?</h4>
+<p>We recommend <a href="https://www.anaconda.com/download/">Anaconda</a> to get Python tools and libraries. Our code is tested with Python 3.5.3 :: Anaconda 4.4.0. This is important because older version have been known to have <a href="https://stackoverflow.com/a/45934992/207661">problems</a>.</p>
+
+<h4 id="i-get-error-on-import-cv2">I get error on <code class="language-plaintext highlighter-rouge">import cv2</code></h4>
+<p>You can install OpenCV using:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda install opencv
+pip install opencv-python
+</code></pre></div></div>
+
+<h4 id="typeerror-unsupported-operand-types-for--asyncioloop-and-float">TypeError: unsupported operand type(s) for *: ‘AsyncIOLoop’ and ‘float’</h4>
+
+<p>This error happens if you install Jupyter, which somehow breaks the msgpackrpc library.  Create a new python environment
+which the minimal required packages.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

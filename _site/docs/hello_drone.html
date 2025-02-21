@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Hello Drone | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Hello Drone" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/hello_drone.html" />
+<meta property="og:url" content="http://localhost:4000/docs/hello_drone.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Hello Drone" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/hello_drone.html","headline":"Hello Drone","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="hello-drone">Hello Drone</h1>
+
+<h2 id="how-does-hello-drone-work">How does Hello Drone work?</h2>
+
+<p>Hello Drone uses the RPC client to connect to the RPC server that is automatically started by the AirSim. 
+The RPC server routes all the commands to a class that implements <a href="https://github.com/Microsoft/AirSim/tree/main/AirLib//include/vehicles/multirotor/api/MultirotorApiBase.hpp">MultirotorApiBase</a>. In essence, MultirotorApiBase defines our abstract interface for getting data from the quadrotor and sending back commands. We currently have concrete implementation for MultirotorApiBase for MavLink based vehicles. The implementation for DJI drone platforms, specifically Matrice, is in works.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

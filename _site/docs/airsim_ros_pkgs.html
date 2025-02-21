@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>airsim_ros_pkgs | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="airsim_ros_pkgs" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/airsim_ros_pkgs.html" />
+<meta property="og:url" content="http://localhost:4000/docs/airsim_ros_pkgs.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="airsim_ros_pkgs" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/airsim_ros_pkgs.html","headline":"airsim_ros_pkgs","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="airsim_ros_pkgs">airsim_ros_pkgs</h1>
+
+<p>A ROS wrapper over the AirSim C++ client library.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>The below steps are meant for Linux. If you’re running AirSim on Windows, you can use Windows Subsystem for Linux (WSL) to run the ROS wrapper, see the instructions <a href="#setting-up-the-build-environment-on-windows10-using-wsl1-or-wsl2">below</a>. If you’re unable or don’t prefer to install ROS and related tools on your host Linux due to some issues, you can also try it using Docker, see the steps in <a href="#using-docker-for-ros">Using Docker for ROS wrapper</a></p>
+
+<ul>
+  <li>
+    <p>If your default GCC version is not 8 or above (check using <code class="language-plaintext highlighter-rouge">gcc --version</code>)</p>
+
+    <ul>
+      <li>Install gcc &gt;= 8.0.0: <code class="language-plaintext highlighter-rouge">sudo apt-get install gcc-8 g++-8</code></li>
+      <li>Verify installation by <code class="language-plaintext highlighter-rouge">gcc-8 --version</code></li>
+    </ul>
+  </li>
+  <li>Ubuntu 16.04
+    <ul>
+      <li>Install <a href="https://wiki.ros.org/kinetic/Installation/Ubuntu">ROS kinetic</a></li>
+      <li>Install tf2 sensor and mavros packages: <code class="language-plaintext highlighter-rouge">sudo apt-get install ros-kinetic-tf2-sensor-msgs ros-kinetic-tf2-geometry-msgs ros-kinetic-mavros*</code></li>
+    </ul>
+  </li>
+  <li>Ubuntu 18.04
+    <ul>
+      <li>Install <a href="https://wiki.ros.org/melodic/Installation/Ubuntu">ROS melodic</a></li>
+      <li>Install tf2 sensor and mavros packages: <code class="language-plaintext highlighter-rouge">sudo apt-get install ros-melodic-tf2-sensor-msgs ros-melodic-tf2-geometry-msgs ros-melodic-mavros*</code></li>
+    </ul>
+  </li>
+  <li>Ubuntu 20.04
+    <ul>
+      <li>Install <a href="https://wiki.ros.org/noetic/Installation/Ubuntu">ROS noetic</a></li>
+      <li>Install tf2 sensor and mavros packages: <code class="language-plaintext highlighter-rouge">sudo apt-get install ros-noetic-tf2-sensor-msgs ros-noetic-tf2-geometry-msgs ros-noetic-mavros*</code></li>
+    </ul>
+  </li>
+  <li>Install <a href="https://catkin-tools.readthedocs.io/en/latest/installing.html">catkin_tools</a>
+  <code class="language-plaintext highlighter-rouge">sudo apt-get install python-catkin-tools</code> or
+  <code class="language-plaintext highlighter-rouge">pip install catkin_tools</code>. If using Ubuntu 20.04 use <code class="language-plaintext highlighter-rouge">pip install "git+https://github.com/catkin/catkin_tools.git#egg=catkin_tools"</code></li>
+</ul>
+
+<h2 id="build">Build</h2>
+
+<ul>
+  <li>Build AirSim</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/Microsoft/AirSim.git<span class="p">;</span>
+<span class="nb">cd </span>AirSim<span class="p">;</span>
+./setup.sh<span class="p">;</span>
+./build.sh<span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Make sure that you have setup the environment variables for ROS as mentioned in the installation pages above. Add the <code class="language-plaintext highlighter-rouge">source</code> command to your <code class="language-plaintext highlighter-rouge">.bashrc</code> for convenience (replace <code class="language-plaintext highlighter-rouge">melodic</code> with specfic version name) -</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"source /opt/ros/melodic/setup.bash"</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+<span class="nb">source</span> ~/.bashrc
+</code></pre></div></div>
+
+<ul>
+  <li>Build ROS package</li>
+</ul>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>ros<span class="p">;</span>
+catkin build<span class="p">;</span> <span class="c"># or catkin_make</span>
+</code></pre></div></div>
+
+<p>If your default GCC isn’t 8 or greater (check using <code class="language-plaintext highlighter-rouge">gcc --version</code>), then compilation will fail. In that case, use <code class="language-plaintext highlighter-rouge">gcc-8</code> explicitly as follows-</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>catkin build <span class="nt">-DCMAKE_C_COMPILER</span><span class="o">=</span>gcc-8 <span class="nt">-DCMAKE_CXX_COMPILER</span><span class="o">=</span>g++-8
+</code></pre></div></div>
+
+<h2 id="running">Running</h2>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source </span>devel/setup.bash<span class="p">;</span>
+roslaunch airsim_ros_pkgs airsim_node.launch<span class="p">;</span>
+roslaunch airsim_ros_pkgs rviz.launch<span class="p">;</span>
+</code></pre></div></div>
+
+<p><strong>Note</strong>: If you get an error running <code class="language-plaintext highlighter-rouge">roslaunch airsim_ros_pkgs airsim_node.launch</code>, run <code class="language-plaintext highlighter-rouge">catkin clean</code> and try again</p>
+
+<h2 id="using-airsim-ros-wrapper">Using AirSim ROS wrapper</h2>
+
+<p>The ROS wrapper is composed of two ROS nodes - the first is a wrapper over AirSim’s multirotor C++ client library, and the second is a simple PD position controller.
+Let’s look at the ROS API for both nodes:</p>
+
+<h3 id="airsim-ros-wrapper-node">AirSim ROS Wrapper Node</h3>
+
+<h4 id="publishers">Publishers:</h4>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/origin_geo_point</code> <a href="https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GPSYaw.msg">airsim_ros_pkgs/GPSYaw</a>
+GPS coordinates corresponding to global NED frame. This is set in the airsim’s <a href="https://microsoft.github.io/AirSim/settings/">settings.json</a> file under the <code class="language-plaintext highlighter-rouge">OriginGeopoint</code> key.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/global_gps</code> <a href="https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html">sensor_msgs/NavSatFix</a>
+This the current GPS coordinates of the drone in airsim.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/odom_local_ned</code> <a href="https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html">nav_msgs/Odometry</a>
+Odometry in NED frame (default name: odom_local_ned, launch name and frame type are configurable) wrt take-off point.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE/camera_info</code> <a href="https://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html">sensor_msgs/CameraInfo</a></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/CAMERA_NAME/IMAGE_TYPE</code> <a href="https://docs.ros.org/api/sensor_msgs/html/msg/Image.html">sensor_msgs/Image</a>
+RGB or float image depending on image type requested in settings.json.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/tf</code> <a href="https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html">tf2_msgs/TFMessage</a></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/altimeter/SENSOR_NAME</code> <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/msg/Altimeter.msg">airsim_ros_pkgs/Altimeter</a>
+This the current altimeter reading for altitude, pressure, and <a href="https://en.wikipedia.org/wiki/QNH">QNH</a></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/imu/SENSOR_NAME</code> <a href="http://docs.ros.org/api/sensor_msgs/html/msg/Imu.html">sensor_msgs::Imu</a>
+IMU sensor data</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/magnetometer/SENSOR_NAME</code> <a href="http://docs.ros.org/api/sensor_msgs/html/msg/MagneticField.html">sensor_msgs::MagneticField</a>
+Meausrement of magnetic field vector/compass</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/distance/SENSOR_NAME</code> <a href="http://docs.ros.org/api/sensor_msgs/html/msg/Range.html">sensor_msgs::Range</a>
+Meausrement of distance from an active ranger, such as infrared or IR</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/lidar/SENSOR_NAME</code> <a href="http://docs.ros.org/api/sensor_msgs/html/msg/PointCloud2.html">sensor_msgs::PointCloud2</a>
+LIDAR pointcloud</p>
+  </li>
+</ul>
+
+<h4 id="subscribers">Subscribers:</h4>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/vel_cmd_body_frame</code> <a href="https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg">airsim_ros_pkgs/VelCmd</a>
+Ignore <code class="language-plaintext highlighter-rouge">vehicle_name</code> field, leave it to blank. We will use <code class="language-plaintext highlighter-rouge">vehicle_name</code> in future for multiple drones.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/vel_cmd_world_frame</code> <a href="https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg">airsim_ros_pkgs/VelCmd</a>
+Ignore <code class="language-plaintext highlighter-rouge">vehicle_name</code> field, leave it to blank. We will use <code class="language-plaintext highlighter-rouge">vehicle_name</code> in future for multiple drones.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/gimbal_angle_euler_cmd</code> <a href="https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GimbalAngleEulerCmd.msg">airsim_ros_pkgs/GimbalAngleEulerCmd</a>
+Gimbal set point in euler angles.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/gimbal_angle_quat_cmd</code> <a href="https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GimbalAngleQuatCmd.msg">airsim_ros_pkgs/GimbalAngleQuatCmd</a>
+Gimbal set point in quaternion.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/car_cmd</code> <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/msg/CarControls.msg">airsim_ros_pkgs/CarControls</a>
+Throttle, brake, steering and gear selections for control. Both automatic and manual transmission control possible, see the <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/scripts/car_joy"><code class="language-plaintext highlighter-rouge">car_joy.py</code></a> script for use.</p>
+  </li>
+</ul>
+
+<h4 id="services">Services:</h4>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/land</code> <a href="https://docs.ros.org/api/std_srvs/html/srv/Empty.html">airsim_ros_pkgs/Takeoff</a></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/takeoff</code> <a href="https://docs.ros.org/api/std_srvs/html/srv/Empty.html">airsim_ros_pkgs/Takeoff</a></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/reset</code> <a href="https://docs.ros.org/api/std_srvs/html/srv/Empty.html">airsim_ros_pkgs/Reset</a>
+ Resets <em>all</em> drones</p>
+  </li>
+</ul>
+
+<h4 id="parameters">Parameters:</h4>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/world_frame_id</code> [string]
+Set in: <code class="language-plaintext highlighter-rouge">$(airsim_ros_pkgs)/launch/airsim_node.launch</code>
+Default: world_ned
+Set to “world_enu” to switch to ENU frames automatically</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/odom_frame_id</code> [string]
+Set in: <code class="language-plaintext highlighter-rouge">$(airsim_ros_pkgs)/launch/airsim_node.launch</code>
+Default: odom_local_ned
+If you set world_frame_id to “world_enu”, the default odom name will instead default to “odom_local_enu”</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/coordinate_system_enu</code> [boolean]
+Set in: <code class="language-plaintext highlighter-rouge">$(airsim_ros_pkgs)/launch/airsim_node.launch</code>
+Default: false
+If you set world_frame_id to “world_enu”, this setting will instead default to true</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/update_airsim_control_every_n_sec</code> [double]
+Set in: <code class="language-plaintext highlighter-rouge">$(airsim_ros_pkgs)/launch/airsim_node.launch</code>
+Default: 0.01 seconds.
+Timer callback frequency for updating drone odom and state from airsim, and sending in control commands.
+The current RPClib interface to unreal engine maxes out at 50 Hz.
+Timer callbacks in ROS run at maximum rate possible, so it’s best to not touch this parameter.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/update_airsim_img_response_every_n_sec</code> [double]
+Set in: <code class="language-plaintext highlighter-rouge">$(airsim_ros_pkgs)/launch/airsim_node.launch</code>
+Default: 0.01 seconds.
+Timer callback frequency for receiving images from all cameras in airsim.
+The speed will depend on number of images requested and their resolution.
+Timer callbacks in ROS run at maximum rate possible, so it’s best to not touch this parameter.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/publish_clock</code> [double]
+Set in: <code class="language-plaintext highlighter-rouge">$(airsim_ros_pkgs)/launch/airsim_node.launch</code>
+Default: false
+Will publish the ros /clock topic if set to true.</p>
+  </li>
+</ul>
+
+<h3 id="simple-pid-position-controller-node">Simple PID Position Controller Node</h3>
+
+<h4 id="parameters-1">Parameters:</h4>
+
+<ul>
+  <li>PD controller parameters:
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/pd_position_node/kd_x</code> [double],
+<code class="language-plaintext highlighter-rouge">/pd_position_node/kp_y</code> [double],
+<code class="language-plaintext highlighter-rouge">/pd_position_node/kp_z</code> [double],
+<code class="language-plaintext highlighter-rouge">/pd_position_node/kp_yaw</code> [double]
+Proportional gains</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/pd_position_node/kd_x</code> [double],
+<code class="language-plaintext highlighter-rouge">/pd_position_node/kd_y</code> [double],
+<code class="language-plaintext highlighter-rouge">/pd_position_node/kd_z</code> [double],
+<code class="language-plaintext highlighter-rouge">/pd_position_node/kd_yaw</code> [double]
+Derivative gains</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/pd_position_node/reached_thresh_xyz</code> [double]
+Threshold euler distance (meters) from current position to setpoint position</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/pd_position_node/reached_yaw_degrees</code> [double]
+Threshold yaw distance (degrees) from current position to setpoint position</p>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">/pd_position_node/update_control_every_n_sec</code> [double]
+Default: 0.01 seconds</li>
+</ul>
+
+<h4 id="services-1">Services:</h4>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/gps_goal</code> [Request: <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/srv/SetGPSPosition.srv">srv/SetGPSPosition</a>]
+Target gps position + yaw.
+In <strong>absolute</strong> altitude.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/local_position_goal</code> [Request: <a href="https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/srv/SetLocalPosition.srv">srv/SetLocalPosition</a>]
+Target local position + yaw in global NED frame.</p>
+  </li>
+</ul>
+
+<h4 id="subscribers-1">Subscribers:</h4>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/origin_geo_point</code> <a href="https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GPSYaw.msg">airsim_ros_pkgs/GPSYaw</a>
+Listens to home geo coordinates published by <code class="language-plaintext highlighter-rouge">airsim_node</code>.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/airsim_node/VEHICLE_NAME/odom_local_ned</code> <a href="https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html">nav_msgs/Odometry</a>
+Listens to odometry published by <code class="language-plaintext highlighter-rouge">airsim_node</code></p>
+  </li>
+</ul>
+
+<h4 id="publishers-1">Publishers:</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/vel_cmd_world_frame</code> <a href="https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg">airsim_ros_pkgs/VelCmd</a>
+Sends velocity command to <code class="language-plaintext highlighter-rouge">airsim_node</code></li>
+</ul>
+
+<h4 id="global-params">Global params</h4>
+
+<ul>
+  <li>Dynamic constraints. These can be changed in <code class="language-plaintext highlighter-rouge">dynamic_constraints.launch</code>:
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/max_vel_horz_abs</code> [double]
+Maximum horizontal velocity of the drone (meters/second)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/max_vel_vert_abs</code> [double]
+Maximum vertical velocity of the drone (meters/second)</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">/max_yaw_rate_degree</code> [double]
+Maximum yaw rate (degrees/second)</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="misc">Misc</h2>
+
+<h3 id="setting-up-the-build-environment-on-windows10-using-wsl1-or-wsl2">Setting up the Build Environment on Windows10 using WSL1 or WSL2</h3>
+
+<p>These setup instructions describe how to setup “Bash on Ubuntu on Windows” (aka “Windows Subsystem for Linux”).</p>
+
+<p>It involves enabling the built-in Windows Linux environment (WSL) in Windows10, installing a compatible Linux OS image, and finally installing the build environment as if it were a normal Linux system.</p>
+
+<p>Upon completion, you will be able to build and run the ros wrapper as in a native linux machine.</p>
+
+<h5 id="wsl1-vs-wsl2">WSL1 vs WSL2</h5>
+
+<p>WSL2 is the latest version of the Windows10 Subsystem for Linux. It is many times faster than WSL1 (if you use the native file system in <code class="language-plaintext highlighter-rouge">/home/...</code> rather
+than Windows mounted folders under <code class="language-plaintext highlighter-rouge">/mnt/...</code>) and is therefore much preferred for building the code in terms of speed.</p>
+
+<p>Once installed, you can switch between WSL1 or WSL2 versions as you prefer.</p>
+
+<h5 id="wsl-setup-steps">WSL Setup steps</h5>
+
+<ol>
+  <li>
+    <p>Follow the instructions <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">here</a>. Check that the ROS version you want to use is supported by the Ubuntu version you want to install.</p>
+  </li>
+  <li>
+    <p>Congratulations, you now have a working Ubuntu subsystem under Windows, you can now go to <a href="#setup">Ubuntu 16 / 18 instructions</a> and then <a href="#how-to-run-airsim-on-windows-and-ros-wrapper-on-wsl">How to run Airsim on Windows and ROS wrapper on WSL</a>!</p>
+  </li>
+</ol>
+
+<p>!!! note</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>You can run XWindows applications (including SITL) by installing [VcXsrv](https://sourceforge.net/projects/vcxsrv/)  on Windows.
+To use it find and run `XLaunch` from the Windows start menu.
+Select `Multiple Windows` in first popup, `Start no client` in second popup, **only** `Clipboard` in third popup. Do **not** select `Native Opengl` (and if you are not able to connect select `Disable access control`).
+You will need to set the DISPLAY variable to point to your display: in WSL it is `127.0.0.1:0`, in WSL2 it will be the ip address of the PC's network port and can be set by using the code below. Also in WSL2 you may have to disable the firewall for public networks, or create an exception in order for VcXsrv to communicate with WSL2:
+
+`export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0`
+</code></pre></div></div>
+
+<p>!!! tip</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- If you add this line to your ~/.bashrc file you won't need to run this command again
+- For code editing you can install VSCode inside WSL.
+- Windows 10 includes "Windows Defender" virus scanner. It will slow down WSL quite a bit. Disabling it greatly improves disk performance but increases your risk to viruses so disable at your own risk. Here is one of many resources/videos that show you how to disable it: [How to Disable or Enable Windows Defender on Windows 10](https://youtu.be/FmjblGay3AM)
+</code></pre></div></div>
+
+<h5 id="file-system-access-between-wsl-and-windows10">File System Access between WSL and Windows10</h5>
+
+<p>From within WSL, the Windows drives are referenced in the /mnt directory. For example, in order to list documents within your (<username>) documents folder:</username></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>`ls /mnt/c/'Documents and Settings'/&lt;username&gt;/Documents`
+or
+`ls /mnt/c/Users/&lt;username&gt;/Documents`
+</code></pre></div></div>
+
+<p>From within Windows, the WSL distribution’s files are located at (type in windows Explorer address bar):</p>
+
+<p><code class="language-plaintext highlighter-rouge">\\wsl$\&lt;distribution name&gt;</code>
+   e.g.
+   <code class="language-plaintext highlighter-rouge">\\wsl$\Ubuntu-18.04</code></p>
+
+<h5 id="how-to-run-airsim-on-windows-and-ros-wrapper-on-wsl">How to run Airsim on Windows and ROS wrapper on WSL</h5>
+
+<p>For WSL 1 execute:
+<code class="language-plaintext highlighter-rouge">export WSL_HOST_IP=127.0.0.1</code>
+and for WSL 2:
+<code class="language-plaintext highlighter-rouge">export WSL_HOST_IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}')</code>
+Now, as in the <a href="#running">running section for linux</a>, execute the following:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source </span>devel/setup.bash
+roslaunch airsim_ros_pkgs airsim_node.launch output:<span class="o">=</span>screen host:<span class="o">=</span><span class="nv">$WSL_HOST_IP</span>
+roslaunch airsim_ros_pkgs rviz.launch
+</code></pre></div></div>
+
+<h3 id="using-docker-for-ros">Using Docker for ROS</h3>
+
+<p>A Dockerfile is present in the <a href="https://github.com/microsoft/AirSim/tree/main/tools/Dockerfile-ROS"><code class="language-plaintext highlighter-rouge">tools</code></a> directory. To build the <code class="language-plaintext highlighter-rouge">airsim-ros</code> image -</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tools
+docker build <span class="nt">-t</span> airsim-ros <span class="nt">-f</span> Dockerfile-ROS <span class="nb">.</span>
+</code></pre></div></div>
+
+<p>To run, replace the path of the AirSim folder below -</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class="nt">--net</span><span class="o">=</span>host <span class="nt">-v</span> &lt;your-AirSim-folder-path&gt;:/home/testuser/AirSim airsim-ros:latest bash
+</code></pre></div></div>
+
+<p>The above command mounts the AirSim directory to the home directory inside the container. Any changes you make in the source files from your host will be visible inside the container, which is useful for development and testing. Now follow the steps from <a href="#build">Build</a> to compile and run the ROS wrapper.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

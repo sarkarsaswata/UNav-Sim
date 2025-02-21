@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Camera Views | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Camera Views" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/camera_views.html" />
+<meta property="og:url" content="http://localhost:4000/docs/camera_views.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Camera Views" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/camera_views.html","headline":"Camera Views","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="camera-views">Camera Views</h1>
+
+<p>The camera views that are shown on screen are the camera views you can fetch via the <a href="image_apis.md">simGetImages API</a>.</p>
+
+<p><img src="images/cameras.png" alt="Cameras" /></p>
+
+<p>From left to right is the depth view, segmentation view and the FPV view. See <a href="image_apis.md">Image APIs</a> for description of various available views.</p>
+
+<h2 id="turning-onoff-views">Turning ON/OFF Views</h2>
+
+<p>Press F1 key to see keyboard shortcuts for turning on/off any or all views. You can also select various view modes there, such as “Fly with Me” mode, FPV mode and “Ground View” mode.</p>
+
+<h2 id="controlling-manual-camera">Controlling Manual Camera</h2>
+
+<p>You can switch to manual camera control by pressing the M key. While manual camera control mode is selected, you can use the following keys to control the camera:
+|Key|Action|
+—|—
+|Arrow keys|move the camera forward/back and left/right|
+|Page up/down|move the camera up/down|
+|W/A/S/D|control pitch up/down and yaw left/right|
+|Left shift|increase movement speed|
+|Left control|decrease movement speed|</p>
+
+<h2 id="configuring-sub-windows">Configuring Sub-Windows</h2>
+
+<p>Now you can select what is shown by each of above sub windows. For instance, you can chose to show surface normals in first window (instead of depth) and disparity in second window (instead of segmentation). Below is the settings value you can use in <a href="settings.md">settings.json</a>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "SubWindows": [
+    {"WindowID": 1, "CameraName": "0", "ImageType": 5, "VehicleName": "", "Visible": false},
+    {"WindowID": 2, "CameraName": "0", "ImageType": 3, "VehicleName": "", "Visible": false}
+  ]
+}
+</code></pre></div></div>
+
+<h2 id="performance-impact">Performance Impact</h2>
+
+<p><em>Note</em>: This section is outdated and has not been updated for new performance enhancement changes.</p>
+
+<p>Now rendering these views does impact the FPS performance of the game, since this is additional work for the GPU.  The following shows the impact on FPS when you open these views.</p>
+
+<p><img src="images/fps_views.png" alt="fps" /></p>
+
+<p>This is measured on Intel core i7 computer with 32 gb RAM and a GeForce GTX 1080
+graphics card running the Modular Neighborhood map, using cooked debug bits, no debugger or GameEditor open.  The normal state with no subviews open is measuring around 16 ms per frame, which means it is keeping a nice steady 60 FPS (which is the target FPS).  As it climbs up to 35ms the FPS drops to around 28 frames per second, spiking to 40ms means a few drops to 25 fps.</p>
+
+<p>The simulator can still function and fly correctly when all this is going on even in the worse case because the physics is decoupled from the rendering.  However if the delay gets too high such that the communication with PX4 hardware is interrupted due to overly busy CPU then the flight can stall due to timeout in the offboard control messages.</p>
+
+<p>On the computer where this was measured the drone could fly the path.py program
+without any problems with all views open, and with 3 python scripts running 
+to capture each view type.  But there was one stall during this flight, but it
+recovered gracefully and completed the path.  So it was right on the limit.</p>
+
+<p>The following shows the impact on CPU, perhaps a bit surprisingly, the CPU impact is also non trivial.</p>
+
+<p><img src="images/cpu_views.png" alt="fps" /></p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

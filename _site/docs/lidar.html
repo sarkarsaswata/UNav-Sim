@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>How to Use Lidar in AirSim | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="How to Use Lidar in AirSim" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/lidar.html" />
+<meta property="og:url" content="http://localhost:4000/docs/lidar.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="How to Use Lidar in AirSim" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/lidar.html","headline":"How to Use Lidar in AirSim","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="how-to-use-lidar-in-airsim">How to Use Lidar in AirSim</h1>
+
+<p>AirSim supports Lidar for multirotors and cars.</p>
+
+<p>The enablement of lidar and the other lidar settings can be configured via AirSimSettings json.
+Please see <a href="sensors.md">general sensors</a> for information on configruation of general/shared sensor settings.</p>
+
+<h2 id="enabling-lidar-on-a-vehicle">Enabling lidar on a vehicle</h2>
+<ul>
+  <li>By default, lidars are not enabled. To enable lidar, set the SensorType and Enabled attributes in settings json.</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="nl">"Lidar1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="nl">"SensorType"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+         </span><span class="nl">"Enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>Multiple lidars can be enabled on a vehicle.</li>
+</ul>
+
+<h2 id="lidar-configuration">Lidar configuration</h2>
+<p>The following parameters can be configured right now via settings json.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NumberOfChannels</td>
+      <td>Number of channels/lasers of the lidar</td>
+    </tr>
+    <tr>
+      <td>Range</td>
+      <td>Range, in meters</td>
+    </tr>
+    <tr>
+      <td>PointsPerSecond</td>
+      <td>Number of points captured per second</td>
+    </tr>
+    <tr>
+      <td>RotationsPerSecond</td>
+      <td>Rotations per second</td>
+    </tr>
+    <tr>
+      <td>HorizontalFOVStart</td>
+      <td>Horizontal FOV start for the lidar, in degrees</td>
+    </tr>
+    <tr>
+      <td>HorizontalFOVEnd</td>
+      <td>Horizontal FOV end for the lidar, in degrees</td>
+    </tr>
+    <tr>
+      <td>VerticalFOVUpper</td>
+      <td>Vertical FOV upper limit for the lidar, in degrees</td>
+    </tr>
+    <tr>
+      <td>VerticalFOVLower</td>
+      <td>Vertical FOV lower limit for the lidar, in degrees</td>
+    </tr>
+    <tr>
+      <td>X Y Z</td>
+      <td>Position of the lidar relative to the vehicle (in NED, in meters)</td>
+    </tr>
+    <tr>
+      <td>Roll Pitch Yaw</td>
+      <td>Orientation of the lidar relative to the vehicle  (in degrees, yaw-pitch-roll order to front vector +X)</td>
+    </tr>
+    <tr>
+      <td>DataFrame</td>
+      <td>Frame for the points in output (“VehicleInertialFrame” or “SensorLocalFrame”)</td>
+    </tr>
+    <tr>
+      <td>ExternalController</td>
+      <td>Whether data is to be sent to external controller such as ArduPilot or PX4 if being used (default <code class="language-plaintext highlighter-rouge">true</code>) (PX4 doesn’t send Lidar data currently)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>e.g.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"SeeDocsAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://microsoft.github.io/AirSim/settings/"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"SettingsVersion"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+
+    </span><span class="nl">"SimMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Multirotor"</span><span class="p">,</span><span class="w">
+
+     </span><span class="nl">"Vehicles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		</span><span class="nl">"Drone1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+			</span><span class="nl">"VehicleType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"simpleflight"</span><span class="p">,</span><span class="w">
+			</span><span class="nl">"AutoCreate"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+			</span><span class="nl">"Sensors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+			    </span><span class="nl">"LidarSensor1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+					</span><span class="nl">"SensorType"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"Enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"NumberOfChannels"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"RotationsPerSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"PointsPerSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">100000</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"Roll"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Pitch"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Yaw"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"VerticalFOVUpper"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"VerticalFOVLower"</span><span class="p">:</span><span class="w"> </span><span class="mi">-25</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"HorizontalFOVStart"</span><span class="p">:</span><span class="w"> </span><span class="mi">-20</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"HorizontalFOVEnd"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"DrawDebugPoints"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"DataFrame"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SensorLocalFrame"</span><span class="w">
+				</span><span class="p">},</span><span class="w">
+				</span><span class="nl">"LidarSensor2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+				   </span><span class="nl">"SensorType"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"Enabled"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"NumberOfChannels"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"RotationsPerSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"PointsPerSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"X"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Y"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Z"</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"Roll"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Pitch"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"Yaw"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"VerticalFOVUpper"</span><span class="p">:</span><span class="w"> </span><span class="mi">-15</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"VerticalFOVLower"</span><span class="p">:</span><span class="w"> </span><span class="mi">-25</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"DrawDebugPoints"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+					</span><span class="nl">"DataFrame"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SensorLocalFrame"</span><span class="w">
+				</span><span class="p">}</span><span class="w">
+			</span><span class="p">}</span><span class="w">
+		</span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="server-side-visualization-for-debugging">Server side visualization for debugging</h2>
+
+<p>By default, the lidar points are not drawn on the viewport. To enable the drawing of hit laser points on the viewport, please enable setting <code class="language-plaintext highlighter-rouge">DrawDebugPoints</code> via settings json.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="nl">"Lidar1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="err">...</span><span class="w">
+         </span><span class="nl">"DrawDebugPoints"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="err">,</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Note:</strong> Enabling <code class="language-plaintext highlighter-rouge">DrawDebugPoints</code> can cause excessive memory usage and crash in releases <code class="language-plaintext highlighter-rouge">v1.3.1</code>, <code class="language-plaintext highlighter-rouge">v1.3.0</code>. This has been fixed in the main branch and should work in later releases</p>
+
+<h2 id="client-api">Client API</h2>
+
+<p>Use <code class="language-plaintext highlighter-rouge">getLidarData()</code> API to retrieve the Lidar data.</p>
+
+<ul>
+  <li>The API returns a Point-Cloud as a flat array of floats along with the timestamp of the capture and lidar pose.</li>
+  <li>Point-Cloud:
+    <ul>
+      <li>The floats represent [x,y,z] coordinate for each point hit within the range in the last scan.</li>
+      <li>The frame for the points in the output is configurable using “DataFrame” attribute -
+        <ul>
+          <li>”” or <code class="language-plaintext highlighter-rouge">VehicleInertialFrame</code> – default; returned points are in vehicle inertial frame (in NED, in meters)</li>
+          <li><code class="language-plaintext highlighter-rouge">SensorLocalFrame</code> – returned points are in lidar local frame (in NED, in meters)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Lidar Pose:
+    <ul>
+      <li>Lidar pose in the vehicle inertial frame (in NED, in meters)</li>
+      <li>Can be used to transform points to other frames.</li>
+    </ul>
+  </li>
+  <li>Segmentation: The segmentation of each lidar point’s collided object</li>
+</ul>
+
+<h3 id="python-examples">Python Examples</h3>
+<ul>
+  <li><a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/drone_lidar.py">drone_lidar.py</a></li>
+  <li><a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/car/car_lidar.py">car_lidar.py</a></li>
+  <li><a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/sensorframe_lidar_pointcloud.py">sensorframe_lidar_pointcloud.py</a></li>
+  <li><a href="https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/vehicleframe_lidar_pointcloud.py">vehicleframe_lidar_pointcloud.py</a></li>
+</ul>
+
+<h2 id="coming-soon">Coming soon</h2>
+<ul>
+  <li>Visualization of lidar data on client side.</li>
+</ul>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

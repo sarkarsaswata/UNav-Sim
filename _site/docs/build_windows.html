@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Build AirSim on Windows | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Build AirSim on Windows" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/build_windows.html" />
+<meta property="og:url" content="http://localhost:4000/docs/build_windows.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Build AirSim on Windows" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/build_windows.html","headline":"Build AirSim on Windows","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="build-airsim-on-windows">Build AirSim on Windows</h1>
+
+<h2 id="install-unreal-engine">Install Unreal Engine</h2>
+
+<ol>
+  <li><a href="https://www.unrealengine.com/download">Download</a> the Epic Games Launcher. While the Unreal Engine is open source and free to download, registration is still required.</li>
+  <li>
+    <p>Run the Epic Games Launcher, open the <code class="language-plaintext highlighter-rouge">Unreal Engine</code> tab on the left pane.
+Click on the <code class="language-plaintext highlighter-rouge">Install</code> button on the top right, which should show the option to download <strong>Unreal Engine &gt;= 4.27</strong>. Chose the install location to suit your needs, as shown in the images below. If you have multiple versions of Unreal installed then <strong>make sure the version you are using is set to <code class="language-plaintext highlighter-rouge">current</code></strong> by clicking down arrow next to the Launch button for the version.</p>
+
+    <p><strong>Note</strong>: If you have UE 4.16 or older projects, please see the <a href="unreal_upgrade.md">upgrade guide</a> to upgrade your projects.</p>
+  </li>
+</ol>
+
+<p><img src="images/ue_install.png" alt="Unreal Engine Tab UI Screenshot" /></p>
+
+<p><img src="images/ue_install_location.png" alt="Unreal Engine Install Location UI Screenshot" /></p>
+
+<h2 id="build-airsim">Build AirSim</h2>
+<ul>
+  <li>Install Visual Studio 2022.
+<strong>Make sure</strong> to select <strong>Desktop Development with C++</strong> and <strong>Windows 10 SDK 10.0.19041</strong> (should be selected by default) and select the latest .NET Framework SDK under the ‘Individual Components’ tab while installing VS 2022.</li>
+  <li>Start <code class="language-plaintext highlighter-rouge">Developer Command Prompt for VS 2022</code>.</li>
+  <li>
+    <p>Clone the repo: <code class="language-plaintext highlighter-rouge">git clone https://github.com/Microsoft/AirSim.git</code>, and go the AirSim directory by <code class="language-plaintext highlighter-rouge">cd AirSim</code>.</p>
+
+    <p><strong>Note:</strong> It’s generally not a good idea to install AirSim in C drive. This can cause scripts to fail, and requires running VS in Admin mode. Instead clone in a different drive such as D or E.</p>
+  </li>
+  <li>Run <code class="language-plaintext highlighter-rouge">build.cmd</code> from the command line. This will create ready to use plugin bits in the <code class="language-plaintext highlighter-rouge">Unreal\Plugins</code> folder that can be dropped into any Unreal project.</li>
+</ul>
+
+<h2 id="build-unreal-project">Build Unreal Project</h2>
+
+<p>Finally, you will need an Unreal project that hosts the environment for your vehicles. Make sure to close and re-open the Unreal Engine and the Epic Games Launcher before building your first environment if you haven’t done so already. After restarting the Epic Games Launcher it will ask you to associate project file extensions with Unreal Engine, click on ‘fix now’ to fix it. AirSim comes with a built-in “Blocks Environment” which you can use, or you can create your own. Please see <a href="unreal_proj.md">setting up Unreal Environment</a>.</p>
+
+<h2 id="setup-remote-control-multirotor-only">Setup Remote Control (Multirotor only)</h2>
+
+<p>A remote control is required if you want to fly manually. See the <a href="remote_control.md">remote control setup</a> for more details.</p>
+
+<p>Alternatively, you can use <a href="apis.md">APIs</a> for programmatic control or use the so-called <a href="image_apis.md">Computer Vision mode</a> to move around using the keyboard.</p>
+
+<h2 id="how-to-use-airsim">How to Use AirSim</h2>
+
+<p>Once AirSim is set up by following above steps, you can,</p>
+
+<ol>
+  <li>
+    <p>Double click on .sln file to load the Blocks project in <code class="language-plaintext highlighter-rouge">Unreal\Environments\Blocks</code> (or .sln file in your own <a href="unreal_custenv.md">custom</a> Unreal project). If you don’t see .sln file then you probably haven’t completed steps in Build Unreal Project section above.</p>
+
+    <p><strong>Note</strong>: Unreal 4.27 will auto-generate the .sln file targetting Visual Studio 2019. Visual Studio 2022 will be able to load and run this .sln, but if you want full Visual Studio 2022 support, you will need to explicitly enable support by going to ‘Edit-&gt;Editor Preferences-&gt;Source Code’ and selecting ‘Visual Studio 2022’ for the ‘Source Code Editor’ setting.</p>
+  </li>
+  <li>Select your Unreal project as Start Up project (for example, Blocks project) and make sure Build config is set to “Develop Editor” and x64.</li>
+  <li>After Unreal Editor loads, press Play button.</li>
+</ol>
+
+<p>!!! tip
+    Go to ‘Edit-&gt;Editor Preferences’, in the ‘Search’ box type ‘CPU’ and ensure that the ‘Use Less CPU when in Background’ is unchecked.</p>
+
+<p>See <a href="apis.md">Using APIs</a> and <a href="settings.md">settings.json</a> for various options available.</p>
+
+<h1 id="airsim-on-unity-experimental">AirSim on Unity (Experimental)</h1>
+<p><a href="https://unity3d.com/">Unity</a> is another great game engine platform and we have an <strong>experimental</strong> integration of <a href="Unity.md">AirSim with Unity</a>. Please note that this is work in progress and all features may not work yet.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>UNav-Sim | Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="UNav-Sim" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/voxel_grid.html" />
+<meta property="og:url" content="http://localhost:4000/docs/voxel_grid.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="UNav-Sim" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/voxel_grid.html","headline":"UNav-Sim","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <p>AirSim provides a feature that constructs ground truth voxel grids of the world directly from Unreal Engine. A voxel grid is a representation of the occupancy of a given world/map, by discretizing into cells of a certain size; and recording a voxel if that particular location is occupied.</p>
+
+<p>The logic for constructing the voxel grid is in WorldSimApi.cpp-&gt;createVoxelGrid(). For now, the assumption is that the voxel grid is a cube - and the API call from Python is of the structure:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>simCreateVoxelGrid(self, position, x, y, z, res, of)
+
+position (Vector3r): Global position around which voxel grid is centered in m
+x, y, z (float): Size of each voxel grid dimension in m
+res (float): Resolution of voxel grid in m
+of (str): Name of output file to save voxel grid as
+</code></pre></div></div>
+
+<p>Within <code class="language-plaintext highlighter-rouge">createVoxelGrid()</code>, the main Unreal Engine function that returns occupancy is <a href="https://docs.unrealengine.com/en-US/API/Runtime/Engine/Engine/UWorld/OverlapBlockingTestByChannel/index.html">OverlapBlockingTestByChannel</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OverlapBlockingTestByChannel(position, rotation, ECollisionChannel, FCollisionShape, params);
+</code></pre></div></div>
+
+<p>This function is called on the positions of all the ‘cells’ we wish to discretize the map into, and the returned occupancy result is collected into an array <code class="language-plaintext highlighter-rouge">voxel_grid_</code>. The indexing of the cell occupancy values follows the convention of the <a href="https://www.patrickmin.com/binvox/binvox.html">binvox</a> format.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (float i = 0; i &lt; ncells_x; i++) {
+    for (float k = 0; k &lt; ncells_z; k++) {
+        for (float j = 0; j &lt; ncells_y; j++) {
+            int idx = i + ncells_x * (k + ncells_z * j);
+            FVector position = FVector((i - ncells_x /2) * scale_cm, (j - ncells_y /2) * scale_cm, (k - ncells_z /2) * scale_cm) + position_in_UE_frame;
+            voxel_grid_[idx] = simmode_-&gt;GetWorld()-&gt;OverlapBlockingTestByChannel(position, FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeBox(FVector(scale_cm /2)), params);
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>The occupancy of the map is calculated iteratively over all discretized cells, which can make it an intensive operation depending on the resolution of the cells, and the total size of the area being measured. If the user’s map of interest does not change much, it is possible to run the voxel grid operation once on this map, and save the voxel grid and reuse it. For performance, or with dynamic environments, we recommend running the voxel grid generation for a small area around the robot; and subsequently use it for local planning purposes.</p>
+
+<p>The voxel grids are stored in the binvox format which can then be converted by the user into an octomap .bt or any other relevant, desired format. Subsequently, these voxel grids/octomaps can be used within mapping/planning. One nifty little utility to visualize a created binvox files is <a href="https://www.patrickmin.com/viewvox/">viewvox</a>. Similarly, <code class="language-plaintext highlighter-rouge">binvox2bt</code> can convert the binvox to an octomap file.</p>
+
+<h5 id="example-voxel-grid-in-blocks">Example voxel grid in Blocks:</h5>
+<p><img src="images/voxel_grid.png" alt="image" /></p>
+
+<h5 id="blocks-voxel-grid-converted-to-octomap-format-visualized-in-rviz">Blocks voxel grid converted to Octomap format (visualized in rviz):</h5>
+<p><img src="images/octomap.png" alt="image" /></p>
+
+<p>As an example, a voxel grid can be constructed as follows, once the Blocks environment is up and running:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import airsim
+c = airsim.VehicleClient()
+center = airsim.Vector3r(0, 0, 0)
+output_path = os.path.join(os.getcwd(), "map.binvox")
+c.simCreateVoxelGrid(center, 100, 100, 100, 0.5, output_path)
+</code></pre></div></div>
+
+<p>And visualized through <code class="language-plaintext highlighter-rouge">viewvox map.binvox</code>.</p>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>

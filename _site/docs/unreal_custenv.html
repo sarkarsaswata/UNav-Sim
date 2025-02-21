@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Creating and Setting Up Unreal Environment | UNav-Sim</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Creating and Setting Up Unreal Environment" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<meta property="og:description" content="Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features." />
+<link rel="canonical" href="http://localhost:4000/docs/unreal_custenv.html" />
+<meta property="og:url" content="http://localhost:4000/docs/unreal_custenv.html" />
+<meta property="og:site_name" content="UNav-Sim" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Creating and Setting Up Unreal Environment" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/docs/unreal_custenv.html","headline":"Creating and Setting Up Unreal Environment","@type":"WebPage","description":"Intended as a documentation theme based on Jekyll for technical writers documenting software and other technical products, this theme has all the elements you would need to handle multiple products with both multi-level sidebar navigation, tags, and other documentation features.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="http://localhost:4000/">UNav-Sim</a></h1>
+      
+
+      <h1 id="creating-and-setting-up-unreal-environment">Creating and Setting Up Unreal Environment</h1>
+<p>This page contains the complete instructions start to finish for setting up Unreal environment with AirSim. The Unreal Marketplace has <a href="https://www.unrealengine.com/marketplace/content-cat/assets/environments">several environment</a> available that you can start using in just few minutes. It is also possible to use environments available on websites such as <a href="https://www.turbosquid.com/">turbosquid.com</a> or <a href="https://www.cgtrader.com/">cgitrader.com</a> with bit more effort (here’s <a href="https://www.youtube.com/watch?v=y09VbdQWvQY&amp;feature">tutorial video</a>). In addition there also several <a href="https://github.com/Microsoft/AirSim/issues/424">free environments</a> available.</p>
+
+<p>Below we will use a freely downloadable environment from Unreal Marketplace called Landscape Mountain but the steps are same for any other environments.</p>
+
+<h2 id="note-for-linux-users">Note for Linux Users</h2>
+<p>There is no <code class="language-plaintext highlighter-rouge">Epic Games Launcher</code> for Linux which means that if you need to create custom environment, you will need Windows machine to do that. Once you have Unreal project folder, just copy it over to your Linux machine.</p>
+
+<h2 id="step-by-step-instructions">Step by Step Instructions</h2>
+
+<ol>
+  <li>Make sure AirSim is built and Unreal 4.27 is installed as described in <a href="build_windows.md">build instructions</a>.</li>
+  <li>
+    <p>In <code class="language-plaintext highlighter-rouge">Epic Games Launcher</code> click the Learn tab then scroll down and find <code class="language-plaintext highlighter-rouge">Landscape Mountains</code>. Click the <code class="language-plaintext highlighter-rouge">Create Project</code> and download this content (~2GB download).</p>
+
+    <p><img src="images/landscape_mountains.png" alt="current version" /></p>
+  </li>
+  <li>
+    <p>Open <code class="language-plaintext highlighter-rouge">LandscapeMountains.uproject</code>, it should launch the Unreal Editor.</p>
+
+    <p><img src="images/unreal_editor.png" alt="unreal editor" /></p>
+
+    <p>!!!note</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> The Landscape Mountains project is supported up to Unreal Engine version 4.24. If you do not have 4.24 installed, you should see a dialog titled `Select Unreal Engine Version` with a dropdown to select from installed versions. Select 4.27 or greater to migrate the project to a supported engine version. If you have 4.24 installed, you can manually migrate the project by navigating to the corresponding .uproject file in Windows Explorer, right-clicking it, and selecting the `Switch Unreal Engine version...` option. 
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>From the <code class="language-plaintext highlighter-rouge">File menu</code> select <code class="language-plaintext highlighter-rouge">New C++ class</code>, leave default <code class="language-plaintext highlighter-rouge">None</code> on the type of class, click <code class="language-plaintext highlighter-rouge">Next</code>, leave default name <code class="language-plaintext highlighter-rouge">MyClass</code>, and click <code class="language-plaintext highlighter-rouge">Create Class</code>. We need to do this because Unreal requires at least one source file in project. It should trigger compile and open up Visual Studio solution <code class="language-plaintext highlighter-rouge">LandscapeMountains.sln</code>.</p>
+  </li>
+  <li>
+    <p>Go to your folder for AirSim repo and copy <code class="language-plaintext highlighter-rouge">Unreal\Plugins</code> folder in to your <code class="language-plaintext highlighter-rouge">LandscapeMountains</code> folder. This way now your own Unreal project has AirSim plugin.</p>
+
+    <p>!!!note</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> If the AirSim installation is fresh, i.e, hasn't been built before, make sure that you run `build.cmd` from the root directory once before copying `Unreal\Plugins` folder so that `AirLib` files are also included. If you have made some changes in the Blocks environment, make sure to run `update_to_git.bat` from `Unreal\Environments\Blocks` to update the files in `Unreal\Plugins`.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Edit the <code class="language-plaintext highlighter-rouge">LandscapeMountains.uproject</code> so that it looks like this</p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
+ 	</span><span class="nl">"FileVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+ 	</span><span class="nl">"EngineAssociation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4.27"</span><span class="p">,</span><span class="w">
+ 	</span><span class="nl">"Category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Samples"</span><span class="p">,</span><span class="w">
+ 	</span><span class="nl">"Description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+ 	</span><span class="nl">"Modules"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+ 		</span><span class="p">{</span><span class="w">
+ 			</span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LandscapeMountains"</span><span class="p">,</span><span class="w">
+ 			</span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Runtime"</span><span class="p">,</span><span class="w">
+ 			</span><span class="nl">"LoadingPhase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Default"</span><span class="p">,</span><span class="w">
+ 			</span><span class="nl">"AdditionalDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+ 				</span><span class="s2">"AirSim"</span><span class="w">
+ 			</span><span class="p">]</span><span class="w">
+ 		</span><span class="p">}</span><span class="w">
+ 	</span><span class="p">],</span><span class="w">
+ 	</span><span class="nl">"TargetPlatforms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+ 		</span><span class="s2">"MacNoEditor"</span><span class="p">,</span><span class="w">
+ 		</span><span class="s2">"WindowsNoEditor"</span><span class="w">
+ 	</span><span class="p">],</span><span class="w">
+ 	</span><span class="nl">"Plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+ 		</span><span class="p">{</span><span class="w">
+ 			</span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AirSim"</span><span class="p">,</span><span class="w">
+ 			</span><span class="nl">"Enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+ 		</span><span class="p">}</span><span class="w">
+ 	</span><span class="p">]</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Edit the <code class="language-plaintext highlighter-rouge">Config\DefaultGame.ini</code> to add the following line at the end:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> +MapsToCook=(FilePath="/AirSim/AirSimAssets")
+</code></pre></div>    </div>
+
+    <p>Doing this forces Unreal to include all necessary AirSim content in packaged builds of your project.</p>
+  </li>
+  <li>
+    <p>Close Visual Studio and the  <code class="language-plaintext highlighter-rouge">Unreal Editor</code> and right click the LandscapeMountains.uproject in Windows Explorer and select <code class="language-plaintext highlighter-rouge">Generate Visual Studio Project Files</code>.  This step detects all plugins and source files in your Unreal project and generates <code class="language-plaintext highlighter-rouge">.sln</code> file for Visual Studio.</p>
+
+    <p><img src="images/regen_sln.png" alt="regen" /></p>
+
+    <p>!!!tip</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> If the `Generate Visual Studio Project Files` option is missing you may need to reboot your machine for the Unreal Shell extensions to take effect.  If it is still missing then open the LandscapeMountains.uproject in the Unreal Editor and select `Refresh Visual Studio Project` from the `File` menu.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Reopen <code class="language-plaintext highlighter-rouge">LandscapeMountains.sln</code> in Visual Studio, and make sure “DebugGame Editor” and “Win64” build configuration is the active build configuration.</p>
+
+    <p><img src="images/vsbuild_config.png" alt="build config" /></p>
+  </li>
+  <li>
+    <p>Press <code class="language-plaintext highlighter-rouge">F5</code> to <code class="language-plaintext highlighter-rouge">run</code>. This will start the Unreal Editor. The Unreal Editor allows you to edit the environment, assets and other game related settings. First thing you want to do in your environment is set up <code class="language-plaintext highlighter-rouge">PlayerStart</code> object. In Landscape Mountains environment, <code class="language-plaintext highlighter-rouge">PlayerStart</code> object already exist and you can find it in the <code class="language-plaintext highlighter-rouge">World Outliner</code>. Make sure its location is setup as shown. This is where AirSim plugin will create and place the vehicle. If its too high up then vehicle will fall down as soon as you press play giving potentially random behavior</p>
+
+    <p><img src="images/lm_player_start_pos.png" alt="lm_player_start_pos.png" /></p>
+  </li>
+  <li>
+    <p>In <code class="language-plaintext highlighter-rouge">Window/World Settings</code> as shown below, set the <code class="language-plaintext highlighter-rouge">GameMode Override</code> to <code class="language-plaintext highlighter-rouge">AirSimGameMode</code>:</p>
+
+    <p><img src="images/sim_game_mode.png" alt="sim_game_mode.png" /></p>
+  </li>
+  <li>
+    <p>Go to ‘Edit-&gt;Editor Preferences’ in Unreal Editor, in the ‘Search’ box type ‘CPU’ and ensure that the ‘Use Less CPU when in Background’ is unchecked. If you don’t do this then UE will be slowed down dramatically when UE window loses focus.</p>
+  </li>
+  <li>Be sure to <code class="language-plaintext highlighter-rouge">Save</code> these edits. Hit the Play button in the Unreal Editor. See <a href="https://github.com/Microsoft/AirSim/#how-to-use-it">how to use AirSim</a>.</li>
+</ol>
+
+<p>Congratulations! You are now running AirSim in your own Unreal environment.</p>
+
+<h2 id="choosing-your-vehicle-car-or-multirotor">Choosing Your Vehicle: Car or Multirotor</h2>
+<p>By default AirSim prompts user for which vehicle to use. You can easily change this by setting <a href="settings.md#SimMode">SimMode</a>. Please see <a href="using_car.md">using car</a> guide.</p>
+
+<h2 id="updating-your-environment-to-latest-version-of-airsim">Updating Your Environment to Latest Version of AirSim</h2>
+<p>Once you have your environment using above instructions, you should frequently update your local AirSim code to latest version from GitHub. Below are the instructions to do this:</p>
+
+<ol>
+  <li>First put <a href="https://github.com/Microsoft/AirSim/blob/main/Unreal/Environments/Blocks/clean.bat">clean.bat</a> (or <a href="https://github.com/Microsoft/AirSim/blob/main/Unreal/Environments/Blocks/clean.sh">clean.sh</a> for Linux users) in the root folder of your environment. Run this file to clean up all intermediate files in your Unreal project.</li>
+  <li>Do <code class="language-plaintext highlighter-rouge">git pull</code> in your AirSim repo followed by <code class="language-plaintext highlighter-rouge">build.cmd</code> (or <code class="language-plaintext highlighter-rouge">./build.sh</code> for Linux users).</li>
+  <li>Replace [your project]/Plugins folder with AirSim/Unreal/Plugins folder.</li>
+  <li>Right click on your .uproject file and chose “Generate Visual Studio project files” option. This is not required for Linux.</li>
+</ol>
+
+<h2 id="faq">FAQ</h2>
+
+<h4 id="what-are-other-cool-environments">What are other cool environments?</h4>
+<p><a href="https://www.unrealengine.com/marketplace">Unreal Marketplace</a> has dozens of prebuilt extra-ordinarily detailed <a href="https://www.unrealengine.com/marketplace/content-cat/assets/environments">environments</a> ranging from Moon to Mars and everything in between. The one we have used for testing is called <a href="https://www.unrealengine.com/marketplace/modular-neighborhood-pack">Modular Neighborhood Pack</a>
+but you can use any environment. Another free environment is <a href="https://www.unrealengine.com/marketplace/infinity-blade-plain-lands">Infinity Blade series</a>. Alternatively, if you look under the Learn tab in Epic Game Launcher, you will find many free samples that you can use. One of our favorites is “A Boy and His Kite” which is a 100 square miles of highly detailed environment (caution: you will need <em>very</em> beefy PC to run it!).</p>
+
+<h4 id="when-i-press-play-button-some-kind-of-video-starts-instead-of-my-vehicle">When I press Play button some kind of video starts instead of my vehicle.</h4>
+<p>If the environment comes with MatineeActor, delete it to avoid any startup demo sequences. There might be other ways to remove it as well, for example, click on Blueprints button, then Level Blueprint and then look at Begin Play event in Event Graph. You might want to disconnect any connections that may be starting “matinee”.</p>
+
+<h4 id="is-there-easy-way-to-sync-code-in-my-unreal-project-with-code-in-airsim-repo">Is there easy way to sync code in my Unreal project with code in AirSim repo?</h4>
+<p>Sure, there is! You can find bunch of <code class="language-plaintext highlighter-rouge">.bat</code> files (for linux, <code class="language-plaintext highlighter-rouge">.sh</code>) in <code class="language-plaintext highlighter-rouge">AirSim\Unreal\Environments\Blocks</code>. Just copy them over to your own Unreal project. Most of these are quite simple and self explanatory.</p>
+
+<h4 id="i-get-some-error-about-map">I get some error about map.</h4>
+<p>You might have to set default map for your project. For example, if you are using Modular Neighborhood Pack, set the Editor Starter Map as well as Game Default Map to Demo_Map in Project Settings &gt; Maps &amp; Modes.</p>
+
+<h4 id="i-see-add-to-project-option-for-environment-but-not-create-project-option">I see “Add to project” option for environment but not “Create project” option.</h4>
+<p>In this case, create a new blank C++ project with no Starter Content and add your environment in to it.</p>
+
+<h4 id="i-already-have-my-own-unreal-project-how-do-i-use-airsim-with-it">I already have my own Unreal project. How do I use AirSim with it?</h4>
+<p>Copy the <code class="language-plaintext highlighter-rouge">Unreal\Plugins</code> folder from the build you did in the above section into the root of your Unreal project’s folder. In your Unreal project’s .uproject file, add the key <code class="language-plaintext highlighter-rouge">AdditionalDependencies</code> to the “Modules” object
+as we showed in the <code class="language-plaintext highlighter-rouge">LandscapeMountains.uproject</code> above.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"AdditionalDependencies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"AirSim"</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>and the <code class="language-plaintext highlighter-rouge">Plugins</code> section to the top level object:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"Plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AirSim"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+    
+  </body>
+</html>
