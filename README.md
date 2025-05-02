@@ -25,10 +25,12 @@
  [1. Installation](https://github.com/open-airlab/UNav-Sim#1-installation)
  
  [2. Running the simulation](https://github.com/open-airlab/UNav-Sim#2-running-the-simulation)
- 
- [3. UNav-Sim ros navigation stack](https://github.com/open-airlab/UNav-Sim#3-unav-sim-ros-navigation-stack)
 
- [4. UNav-Sim documentation](https://github.com/open-airlab/UNav-Sim#4-unav-sim-documentation)
+ [3. Getting Started](https://github.com/open-airlab/UNav-Sim#3-unav-sim-ros-navigation-stack)
+ 
+ [4. UNav-Sim ros navigation stack](https://github.com/open-airlab/UNav-Sim#4-unav-sim-ros-navigation-stack)
+
+ [5. UNav-Sim documentation](https://github.com/open-airlab/UNav-Sim#5-unav-sim-documentation)
 
 # 1. Installation Instructions (for Ubuntu OS)
 UNav-Sim relies in Unreal Engine 5 for generating realistic renderings. First, install UE5 and then proceed to install UNav-Sim
@@ -78,8 +80,30 @@ right-click on Blocks.uproject, select Unreal Engine Generate Project Files
 - Run and debug using Launch BlocksEditor(DebugGame)
 ```
 
+# 3. Getting Started - HelloROV Example
 
-# 3. UNav-Sim ros navigation stack 
+The **HelloROV** example demonstrates how to use the **UNav-Sim API** in combination with the **AirSim API** to control the ROV's thrusters and execute a **Circular Trajectory Following Controller**. This example drives the ROV along a circular path while maintaining a fixed altitude and yaw angle.
+
+The controller generates a reference for the ROV to follow along a circular trajectory. Parameters like **radius**, **angular velocity**, **altitude**, and **yaw** are defined. At each time step, the controller calculates the reference position in the trajectory and adjusts the control signal.
+
+The controller calculates the required **wrench** (force and torque) that corresponds to the ROV's desired motion. The wrench is then mapped to a set of motor commands using a predefined thrust allocation matrix. The wrench is converted into **PWM signals** for the ROV's thrusters. These PWM signals control the speed of the thrusters, which are responsible for driving the ROV along the planned trajectory.
+
+The control loop operates by continuously generating reference positions and calculating corresponding control signals (wrench). Feedback from the ROV (such as position or orientation data) can be used to adjust the control strategy in real-time, enabling the ROV to stay on the trajectory.
+
+The **AirSim API** facilitates communication between the control system and the ROV. The PWM signals are sent asynchronously to the ROV’s motors using the API's `moveByMotorPWMsAsync` function, allowing the ROV to execute the commands.
+
+### Key APIs for Control
+
+- **PWM Control (Motor Control API):**
+  The AirSim API function `moveByMotorPWMsAsync(pwm, duration)` sends the calculated PWM values to the ROV’s motors, allowing for control of the thrusters.
+
+- **Feedback:**
+  Feedback such as position, velocity, and orientation can be accessed using the AirSim API to monitor the ROV’s progress and adjust the controller’s behavior accordingly.
+
+
+
+
+# 4. UNav-Sim ros navigation stack 
 The UNav-Sim ROS navigation stack, as detailed in the paper, encompasses various components essential for underwater vehicle navigation. It integrates a Nonlinear Model Predictive Controller (NMPC) tailored for the BlueROV2 Heavy model and a pipe-following path planner. Additionally, the stack incorporates several Visual Simultaneous Localization and Mapping (VSLAM) algorithms.
 
 ## Components:
@@ -97,7 +121,7 @@ The UNav-Sim ROS navigation stack, as detailed in the paper, encompasses various
 
 
 
-# 4. UNav-Sim documentation
+# 5. UNav-Sim documentation
 [Link to paper](https://ieeexplore.ieee.org/document/10406819) 
 
 ## Citation
