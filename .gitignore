@@ -402,3 +402,9 @@ PythonClient/docs/_build
 
 # clangd generated folder, for e.g. from VSCode clangd extension
 .cache/
+README.md
+Unreal/Environments/Blocks/.ignore
+Unreal/Environments/Blocks/Blocks.code-workspace
+Unreal/Environments/Blocks/Config/DefaultInput.ini
+Unreal/Environments/Blocks/Blocks.uproject
+Unreal/Environments/Blocks/Config/DefaultEngine.ini
