@@ -9,6 +9,9 @@
 #include <string>
 #include "Windows.h"
 #include "Utils.hpp"
+#include <cstrings>
+#include <thread>
+#include <chrono>
 #ifndef ONECORE
 #pragma comment(lib, "wbemuuid.lib")
 #endif

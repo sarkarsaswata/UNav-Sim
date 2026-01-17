@@ -4,6 +4,7 @@
 #include "SocketInit.hpp"
 #include "Utils.hpp"
 #include <stdexcept>
+#include <cstring>
 
 #ifdef _WIN32
 #include <Windows.h>
