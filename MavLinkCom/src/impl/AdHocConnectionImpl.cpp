@@ -8,6 +8,7 @@
 #include "../serial_com/SerialPort.hpp"
 #include "../serial_com/UdpClientPort.hpp"
 #include "../serial_com/TcpClientPort.hpp"
+#include <unistd.h>
 
 using namespace mavlink_utils;
 using namespace mavlinkcom_impl;
