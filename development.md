@@ -6,18 +6,15 @@ To make **UNav-Sim** operational on **Ubuntu 24.04**, several critical modificat
 
 ### 1. Source Code Patches (Missing Headers)
 
-Modern compilers are stricter about explicit header inclusions. You had to manually add `#include <cstring>` and `#include <unistd.h>` to several files to resolve "undeclared identifier" errors for functions like `memcpy`, `memset`, and `getpid`.
+Modern compilers are stricter about explicit header inclusions. You have to manually add `#include <cstring>` and `#include <unistd.h>` to several files to resolve "undeclared identifier" errors for functions like `memcpy`, `memset`, and `getpid`.
 
 * **MavLinkCom Patches**:
 * `MavLinkCom/src/serial_com/SerialPort.cpp`: Added `#include <cstring>`
 * `MavLinkCom/src/serial_com/TcpClientPort.cpp`: Added `#include <cstring>`
 * `MavLinkCom/src/serial_com/UdpClientPort.cpp`: Added `#include <cstring>`
 * `MavLinkCom/src/serial_com/SocketInit.cpp`: Added `#include <cstring>`
-* `MavLinkCom/src/impl/linux/Utils.cpp`: Added `#include <unistd.h>` (to fix the `getpid` error)
-* `MavLinkCom/src/impl/linux/AdHocConnectionImpl.cpp`: Added `#include <unistd.h>`
-
-* **AirLib Patches**:
-* `MavLinkCom/include/MavLinkConnection.hpp`: Added `#include <memory>`
+<!-- * `MavLinkCom/src/impl/linux/Utils.cpp`: Added `#include <unistd.h>` (to fix the `getpid` error) -->
+<!-- * `MavLinkCom/src/impl/linux/AdHocConnectionImpl.cpp`: Added `#include <unistd.h>` -->
 
 ### 2. The Ubuntu 24.04 Linker Fix (ISO C23 Shim)
 
